@@ -1,0 +1,16 @@
+{
+  "litex": {
+    "gh_user": "enjoy-digital",
+    "gh_repo": "litex",
+    "revision": "e0d5a7bff55923",
+    "gh_archive_nix_hash": "sha256-wPhrnPdRDhNbU2qRUz9I2zkcDc92JnPQZfPDdpCEcyU=",
+  },
+
+  "liteeth": {
+    "gh_user": "litex-hub",
+    "gh_repo": "litex-boards",
+    "revision": "4b48f15265c902",
+    "gh_archive_nix_hash": "sha256-wPhrnPdRDhNbU2qRUz9I2zkcDc92JnPQZfPDdpCEcyU=",
+  },
+
+  "
