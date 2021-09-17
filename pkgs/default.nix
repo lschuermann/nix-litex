@@ -46,14 +46,11 @@ let
         pythondata-misc-tapcfg = pkgs.callPackage (
           import ./pythondata-misc-tapcfg.nix pkgMetas.pythondata-misc-tapcfg) {};
 
-        migen = pkgs.callPackage (import ./migen.nix pkgMetas.migen) {};
-
         litex = pkgs.callPackage (
           import ./litex pkgMetas.litex checked
         ) {
           python3Packages = pkgs.python3Packages // {
             pythondata-software-compiler-rt = self.pythondata-software-compiler-rt;
-            migen = self.migen;
 
             # We use a potentially unchecked LiteDram derivation here
             # to break up the recursive dependency of LiteX ->
@@ -70,7 +67,6 @@ let
         ) {
           python3Packages = pkgs.python3Packages // {
             litex = self.litex;
-            migen = self.migen;
           };
         };
 
@@ -80,7 +76,6 @@ let
         ) {
           python3Packages = pkgs.python3Packages // {
             pythondata-software-compiler-rt = self.pythondata-software-compiler-rt;
-            migen = self.migen;
 
             litex = self.litex;
             liteiclink = self.liteiclink;
@@ -113,7 +108,6 @@ let
             litedram = self.litedram;
             litex = self.litex;
             pythondata-cpu-vexriscv = self.pythondata-cpu-vexriscv;
-            migen = self.migen;
             liteeth = self.liteeth;
             liteiclink = self.liteiclink;
             litepcie = self.litepcie;
@@ -124,7 +118,6 @@ let
           import ./liteeth.nix pkgMetas.liteeth checked
         ) {
           python3Packages = pkgs.python3Packages // {
-            migen = self.migen;
             litex = self.litex;
             liteiclink = self.liteiclink;
             litescope = self.litescope;
@@ -173,7 +166,6 @@ let
           import ./litehyperbus.nix pkgMetas.litehyperbus checked
         ) {
           python3Packages = pkgs.python3Packages // {
-            migen = self.migen;
             litex = self.litex;
           };
         };
@@ -182,7 +174,6 @@ let
           import ./litepcie.nix pkgMetas.litepcie checked
         ) {
           python3Packages = pkgs.python3Packages // {
-            migen = self.migen;
             litex = self.litex;
 
             inherit (self) litespi litehyperbus liteiclink;
