@@ -42,7 +42,7 @@ let
           import ./pythondata-misc-tapcfg.nix pkgMetas.pythondata-misc-tapcfg) {};
 
         litex = pkgs.callPackage (
-          import ./litex pkgMetas.litex checked
+          import ./litex.nix pkgMetas.litex checked
         ) {
           python3Packages = pkgs.python3Packages // {
             pythondata-software-compiler-rt = self.pythondata-software-compiler-rt;
