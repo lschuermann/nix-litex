@@ -1,9 +1,9 @@
-pkgMeta: doChecks: { lib, fetchFromGitHub, python3Packages }:
-
-with python3Packages;
+pkgMeta:
+{ lib, fetchFromGitHub, buildPythonPackage, pythondata-software-compiler_rt
+, pyserial, migen, requests, colorama, litedram, runCommand }:
 
 buildPythonPackage rec {
-  pname = "litex" + (lib.optionalString (!doChecks) "-unchecked");
+  pname = "litex";
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -13,17 +13,17 @@ buildPythonPackage rec {
     sha256 = pkgMeta.github_archive_nix_hash;
   };
 
-  propagatedBuildInputs = with python3Packages; [
+  propagatedBuildInputs = [
     # LLVM's compiler-rt data downloaded and importable as a python
     # package
-    pythondata-software-compiler-rt
+    pythondata-software-compiler_rt
 
     pyserial migen requests colorama
   ];
 
-  checkInputs = with python3Packages; [
+  checkInputs = [
     litedram
   ];
 
-  doCheck = doChecks;
+  doCheck = true;
 }

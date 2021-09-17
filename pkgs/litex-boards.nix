@@ -1,9 +1,9 @@
-pkgMeta: doChecks: finalBuild: { lib, fetchFromGitHub, python3, python3Packages }:
-
-with python3Packages;
+pkgMeta:
+{ lib, buildPythonPackage, fetchFromGitHub, python, migen, litex, litedram, liteeth, liteiclink
+, litepcie }:
 
 buildPythonPackage rec {
-  pname = "litex-boards" + (lib.optionalString (!doChecks) "-unchecked");
+  pname = "litex-boards";
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -26,15 +26,13 @@ buildPythonPackage rec {
   #
   # This will try to import every target and thus fail if a dependency
   # cannot be resolved.
-  checkInputs = with python3Packages; [
-    python3 migen litex litedram liteeth liteiclink litepcie
-  ];
-
-  # If this is the final build of this package, set the
-  # propagatedBuildInputs accordingly such that one can meaningfully
-  # use this package.
-  propagatedBuildInputs = lib.optional finalBuild [
+  checkInputs = [
     migen litex litedram liteeth liteiclink litepcie
   ];
-  doCheck = doChecks;
+
+  propagatedBuildInputs = [
+    migen litex litedram liteeth liteiclink litepcie
+  ];
+
+  doCheck = true;
 }

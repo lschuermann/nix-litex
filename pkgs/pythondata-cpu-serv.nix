@@ -1,6 +1,5 @@
-pkgMeta: { fetchFromGitHub, python3Packages }:
-
-with python3Packages;
+pkgMeta:
+{ fetchFromGitHub, buildPythonPackage }:
 
 buildPythonPackage rec {
   pname = "pythondata-cpu-serv";

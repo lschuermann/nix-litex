@@ -1,9 +1,9 @@
-pkgMeta: doChecks: { lib, fetchFromGitHub, python3Packages }:
-
-with python3Packages;
+pkgMeta:
+{ lib, buildPythonPackage, fetchFromGitHub, litex, pyyaml, migen, litex-boards, litedram, liteeth
+, litespi, litehyperbus, liteiclink }:
 
 buildPythonPackage rec {
-  pname = "litepcie" + (lib.optionalString (!doChecks) "-unchecked");
+  pname = "litepcie";
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -23,5 +23,5 @@ buildPythonPackage rec {
     litex-boards litedram liteeth litespi litehyperbus liteiclink
   ];
 
-  doCheck = doChecks;
+  doCheck = true;
 }

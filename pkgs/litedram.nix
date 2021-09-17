@@ -1,9 +1,13 @@
-pkgMeta: doChecks: { lib, fetchFromGitHub, python3Packages, pkgsCross, verilator, gnumake, libevent, json_c, zlib, zeromq }:
-
-with python3Packages;
+pkgMeta:
+{ lib, fetchFromGitHub, pkgsCross, gnumake, libevent, zlib
+, pandas, numpy, matplotlib, migen, buildPythonPackage
+, litex, pytest, pyyaml, pexpect, pythondata-cpu-serv, pythondata-cpu-vexriscv
+, litescope , pythondata-misc-tapcfg, litex-boards, liteeth, liteiclink, litepcie
+, verilator, json_c, zeromq, runCommand
+}:
 
 buildPythonPackage rec {
-  pname = "litedram" + (lib.optionalString (!doChecks) "-unchecked");
+  pname = "litedram";
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -33,7 +37,7 @@ buildPythonPackage rec {
     pytest -v test/
   '';
 
-  checkInputs = with python3Packages; [
+  checkInputs = [
     # For test summary
     pandas numpy matplotlib
 
@@ -54,5 +58,5 @@ buildPythonPackage rec {
     pkgsCross.riscv64.buildPackages.gcc
   ];
 
-  doCheck = doChecks;
+  doCheck = true;
 }

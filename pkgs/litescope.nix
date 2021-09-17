@@ -1,9 +1,9 @@
-pkgMeta: doChecks: { lib, fetchFromGitHub, python3Packages, pkgsCross }:
-
-with python3Packages;
+pkgMeta:
+{ lib, buildPythonPackage, fetchFromGitHub, pkgsCross, litex, litex-boards, liteiclink, litedram
+, liteeth, litepcie, litespi, litehyperbus, pythondata-cpu-vexriscv }:
 
 buildPythonPackage rec {
-  pname = "litescope"  + (lib.optionalString (!doChecks) "-unchecked");
+  pname = "litescope" ;
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -22,5 +22,5 @@ buildPythonPackage rec {
     pkgsCross.riscv64.buildPackages.gcc
   ];
 
-  doCheck = doChecks;
+  doCheck = true;
 }

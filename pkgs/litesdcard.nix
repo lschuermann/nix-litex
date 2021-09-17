@@ -1,9 +1,8 @@
-pkgMeta: doChecks: { lib, fetchFromGitHub, python3Packages, litex }:
-
-with python3Packages;
+pkgMeta:
+{ lib, buildPythonPackage, fetchFromGitHub, litex }:
 
 buildPythonPackage rec {
-  pname = "litesdcard" + (lib.optionalString (!doChecks) "-unchecked");
+  pname = "litesdcard";
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -19,5 +18,5 @@ buildPythonPackage rec {
     litex
   ];
 
-  doCheck = doChecks;
+  doCheck = true;
 }

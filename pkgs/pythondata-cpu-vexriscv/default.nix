@@ -1,7 +1,7 @@
-{ stdenv, fetchFromGitHub, python3Packages, scala, sbt }:
+{ stdenv, fetchurl, buildPythonPackage }:
 
-with python3Packages;
-
+/*
+# TODO: Move this into a separate file
 let
 
   # Unfortunately I don't understand Scala and the Scala+Nix ecosystem
@@ -83,6 +83,7 @@ let
     };
 
 in
+*/
   buildPythonPackage rec {
     pname = "pythondata-cpu-vexriscv";
 
@@ -95,7 +96,8 @@ in
                             # 7f9db486d40206 of Mar 5, 2021, 9:48 PM
                             # GMT+1
     version = "custom-patched-${buildid}";
-    src = builtins.fetchTarball {
+
+    src = fetchurl {
       url = "https://github.com/lschuermann/litex-vexriscv-custom/releases/download/${buildid}/generated.tar.gz";
       sha256 = "1hm0x9ss0frcy6wy65chnqvqln6bbb048jd388fcx98hll94d6xs";
     };

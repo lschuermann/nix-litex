@@ -30,165 +30,111 @@ in
 let
   lib = pkgs.lib;
 
-  litexPackageDefinitions = checked: finalBuild: uncheckedPkgs: self:
+  unchecked = drv: drv.overrideAttrs (_: {
+    doCheck = false;
+  });
+
+  testedPkgs = [
+    "litex"
+    "litedram"
+    "litex-boards"
+    "liteeth"
+    "litedram"
+    "litehyperbus"
+    "liteiclink"
+    "litepcie"
+    "litescope"
+    "litesdcard"
+    "litespi"
+  ];
+
+  # Make an unchecked package
+  makeUnchecked = self: name:
     let
-      breakRecursion = if checked then uncheckedPkgs else self;
+      f = import (./. + "/${name}.nix") pkgMetas.${name};
+      argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
+      args = builtins.foldl' (acc: name: acc // { ${name} = self.${"${name}-unchecked"}; }) {} argNames;
+      maker = attrs: self.buildPythonPackage (attrs // {
+        name = "${attrs.pname}-pkg";
+        doCheck = false;
+      });
     in
-      {
-        pythondata-software-compiler-rt = pkgs.callPackage (
-          import ./pythondata-software-compiler-rt.nix pkgMetas.pythondata-software-compiler_rt) {};
+    self.callPackage f (args // { buildPythonPackage = maker; });
 
-        pythondata-misc-tapcfg = pkgs.callPackage (
-          import ./pythondata-misc-tapcfg.nix pkgMetas.pythondata-misc-tapcfg) {};
+  # Make a test for the package
+  makeTest = self: name:
+    let
+      f = import (./. + "/${name}.nix") pkgMetas.${name};
+      argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
+      args = builtins.foldl' (acc: name: acc // { ${name} = self.${"${name}-unchecked"}; }) {} argNames;
+      maker = attrs: self.buildPythonPackage (attrs // {
+        name = "${attrs.pname}-test";
+        installPhase = "mkdir $out";
+      });
+    in
+    self.callPackage f (args // { buildPythonPackage = maker; });
 
-        litex = pkgs.callPackage (
-          import ./litex.nix pkgMetas.litex checked
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            pythondata-software-compiler-rt = self.pythondata-software-compiler-rt;
+  # Forward the unchecked package but depend on tests
+  makeFinal = self: name:
+    let
+      f = import (./. + "/${name}.nix") pkgMetas.${name};
+      argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
+    in
+    self.buildPythonPackage {
+      inherit name;
 
-            # We use a potentially unchecked LiteDram derivation here
-            # to break up the recursive dependency of LiteX ->
-            # LiteDRAM -> LiteX. Because in LiteX this is only used
-            # for tests, it's a better choice than to use a
-            # potentially unchecked LiteX in LiteDRAM.
-            litedram = breakRecursion.litedram;
-          };
-        };
+      src = pkgs.linkFarm "empty" [];
 
-        liteiclink = pkgs.callPackage (
-          # LiteICLink tests seem to be broken
-          import ./liteiclink.nix pkgMetas.liteiclink false # checked
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            litex = self.litex;
-          };
-        };
+      nativeBuildInputs = builtins.foldl' (acc: name: acc ++ [ self.${"${name}-test"} ]) [ self.${"${name}-test"} ] argNames;
 
+      installPhase = ''
+        ln -s ${self.${"${name}-unchecked"}} $out
+        runHook postInstall
+      '';
+    };
 
-        litedram = pkgs.callPackage (
-          import ./litedram.nix pkgMetas.litedram checked
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            pythondata-software-compiler-rt = self.pythondata-software-compiler-rt;
+  # Overlay for python packages.
+  pythonOverlay = self: super:
+    builtins.foldl' (acc: name: acc // {
+      "${name}-unchecked" = makeUnchecked self name;
+      "${name}-test" = makeTest self name;
+      "${name}" = makeFinal self name;
+    }) {} testedPkgs
+    // {
+      pythondata-cpu-vexriscv =
+        self.callPackage (import ./pythondata-cpu-vexriscv) {};
+      pythondata-misc-tapcfg =
+        self.callPackage (import ./pythondata-misc-tapcfg.nix pkgMetas.pythondata-misc-tapcfg) {};
+      pythondata-software-compiler_rt =
+        self.callPackage (import ./pythondata-software-compiler_rt.nix pkgMetas.pythondata-software-compiler_rt) {};
+      pythondata-cpu-serv =
+        self.callPackage (import ./pythondata-cpu-serv.nix pkgMetas.pythondata-cpu-serv) {};
+    };
 
-            litex = self.litex;
-            liteiclink = self.liteiclink;
-            litescope = self.litescope;
-            pythondata-cpu-serv = self.pythondata-cpu-serv;
-            pythondata-cpu-vexriscv = self.pythondata-cpu-vexriscv;
-            litepcie = self.litepcie;
-            pythondata-misc-tapcfg = self.pythondata-misc-tapcfg;
+  applyOverlay = python: python.override {
+    packageOverrides = pythonOverlay;
+  };
 
-            # Use a potentially unchecked LiteEth derivation here to
-            # break up the transitive recursive dependency of LiteDRAM
-            # -> LiteEth -> LiteEth
-            liteeth = breakRecursion.liteeth;
+  overlay = self: super: {
+    # Why...
+    python3   = applyOverlay super.python3;
+    python37  = applyOverlay super.python37;
+    python38  = applyOverlay super.python38;
+    python39  = applyOverlay super.python39;
+    python310 = applyOverlay super.python310;
+  };
 
-            # Use a potentially unchecked LiteX boards derivation here
-            # to break up the recursive dependency of LiteDRAM ->
-            # litex-boards -> LiteDRAM. Because in LiteDRAM this is
-            # only used for tests, it's a better choice than to use a
-            # potentially unchecked LiteDRAM in litex-boards.
-            litex-boards = breakRecursion.litex-boards;
-          };
-        };
+  extended = pkgs.extend overlay;
 
-        pythondata-cpu-vexriscv = pkgs.callPackage ./pythondata-cpu-vexriscv {};
-
-        litex-boards = pkgs.callPackage (
-          import ./litex-boards.nix pkgMetas.litex-boards checked finalBuild
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            litedram = self.litedram;
-            litex = self.litex;
-            pythondata-cpu-vexriscv = self.pythondata-cpu-vexriscv;
-            liteeth = self.liteeth;
-            liteiclink = self.liteiclink;
-            litepcie = self.litepcie;
-          };
-        };
-
-        liteeth = pkgs.callPackage (
-          import ./liteeth.nix pkgMetas.liteeth checked
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            litex = self.litex;
-            liteiclink = self.liteiclink;
-            litescope = self.litescope;
-            litedram = self.litedram;
-
-            # Use a potentially unchecked LiteX boards derivation here
-            # to break up the recursive dependency of LiteEth ->
-            # litex-boards -> LiteEth. Because in LiteEth this is only
-            # used for tests, it's a better choice than to use a
-            # potentially unchecked LiteEth in litex-boards.
-            litex-boards = breakRecursion.litex-boards;
-          };
-        };
-
-        pythondata-cpu-serv = pkgs.callPackage (
-          import ./pythondata-cpu-serv.nix pkgMetas.pythondata-cpu-serv) {};
-
-        litespi = pkgs.callPackage (
-          import ./litespi.nix pkgMetas.litespi checked
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            litex = self.litex;
-          };
-        };
-
-        litesdcard = pkgs.callPackage (
-          import ./litesdcard.nix pkgMetas.litesdcard checked
-        ) {
-          litex = self.litex;
-        };
-
-        litescope = pkgs.callPackage (
-          import ./litescope.nix pkgMetas.litescope checked
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            litex = self.litex;
-            liteiclink = self.liteiclink;
-            litepcie = self.litepcie;
-
-            inherit (self) litespi litehyperbus pythondata-cpu-vexriscv;
-
-            # Only used for tests. Would create various cyclic
-            # dependency reliationships, for instance with LiteEth /
-            # LiteDRAM.
-            litex-boards = breakRecursion.litex-boards;
-            liteeth = breakRecursion.liteeth;
-            litedram = breakRecursion.litedram;
-          };
-        };
-
-        litehyperbus = pkgs.callPackage (
-          import ./litehyperbus.nix pkgMetas.litehyperbus checked
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            litex = self.litex;
-          };
-        };
-
-        litepcie = pkgs.callPackage (
-          import ./litepcie.nix pkgMetas.litepcie checked
-        ) {
-          python3Packages = pkgs.python3Packages // {
-            litex = self.litex;
-
-            inherit (self) litespi litehyperbus liteiclink;
-
-            litex-boards = breakRecursion.litex-boards;
-            litedram = breakRecursion.litedram;
-            liteeth = breakRecursion.liteeth;
-          };
-        };
-      };
-
-  uncheckedPkgs = finalBuild: lib.fix (litexPackageDefinitions false finalBuild null);
-  checkedPkgs = lib.converge (litexPackageDefinitions true false (uncheckedPkgs false)) (uncheckedPkgs false);
-  checkedFinalPkgs = litexPackageDefinitions true true checkedPkgs checkedPkgs;
-
+  pkgSet =
+    builtins.foldl' (acc: elem: acc // {
+      ${elem} = extended.python3Packages.${elem};
+    }) {} (
+      builtins.concatLists (builtins.map (x: [ "${x}-unchecked" "${x}-test" x ]) testedPkgs)
+      ++ [
+        "pythondata-cpu-vexriscv" "pythondata-misc-tapcfg"
+        "pythondata-software-compiler_rt" "pythondata-cpu-serv"
+      ]
+    );
 in
-  if skipChecks then (uncheckedPkgs true) else checkedFinalPkgs
+pkgSet // { inherit overlay pythonOverlay; packages = pkgSet; nixpkgsExtended = extended; }

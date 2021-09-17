@@ -1,9 +1,8 @@
-pkgMeta: doChecks: { lib, fetchFromGitHub, python3Packages }:
-
-with python3Packages;
+pkgMeta:
+{ lib, buildPythonPackage, fetchFromGitHub, litex, pyyaml, migen }:
 
 buildPythonPackage rec {
-  pname = "litehyperbus" + (lib.optionalString (!doChecks) "-unchecked");
+  pname = "litehyperbus";
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -19,5 +18,5 @@ buildPythonPackage rec {
     migen
   ];
 
-  doCheck = doChecks;
+  doCheck = true;
 }

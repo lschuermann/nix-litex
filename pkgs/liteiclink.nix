@@ -1,9 +1,8 @@
-pkgMeta: doChecks: { lib, fetchFromGitHub, python3Packages }:
-
-with python3Packages;
+pkgMeta:
+{ lib, buildPythonPackage, fetchFromGitHub, litex, migen }:
 
 buildPythonPackage rec {
-  pname = "liteiclink" + (lib.optionalString (!doChecks) "-unchecked");
+  pname = "liteiclink";
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -17,5 +16,5 @@ buildPythonPackage rec {
     litex migen
   ];
 
-  doCheck = doChecks;
+  doCheck = true;
 }
