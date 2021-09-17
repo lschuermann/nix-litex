@@ -13,7 +13,10 @@ in
   pkgs.mkShell {
     name = "litex-shell";
     buildInputs = with litexPkgs; [
-      migen litex openocd
+      python3Packages.migen
+      openocd
+
+      litex
       litex-boards
       litedram
       liteeth
