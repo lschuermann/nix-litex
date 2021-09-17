@@ -1,12 +1,8 @@
-{ pkgs, skipChecks ? true }:
-
 let
-  lib = pkgs.lib;
-
   # Use builtins.fromTOML if available, otherwise use remarshal to
   # generate JSON which can be read. Code taken from
   # nixpkgs/pkgs/development/tools/poetry2nix/poetry2nix/lib.nix.
-  fromTOML = builtins.fromTOML or (
+  fromTOML = pkgs: builtins.fromTOML or (
     toml: builtins.fromJSON (
       builtins.readFile (
         pkgs.runCommand "from-toml"
@@ -25,15 +21,14 @@ let
       )
     )
   );
+in
 
-  readTOML = path: fromTOML (builtins.readFile path);
+# pkgMetas: Metadata for the packages such that you can control which revisions
+# are used. If not specified, the versions will be taken from `litex_packages.toml`.
+{ pkgs, skipChecks ? true, pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml) }:
 
-  # Read the file containing the different LiteX and related packages'
-  # versions. This is done to have a central place where versions can
-  # be pinned, to allow users to choose between using a Nix derivation
-  # or setting up a regular Python environment and manually collecting
-  # the system dependencies.
-  pkgMetas = readTOML ./litex_packages.toml;
+let
+  lib = pkgs.lib;
 
   litexPackageDefinitions = checked: finalBuild: uncheckedPkgs: self:
     let
