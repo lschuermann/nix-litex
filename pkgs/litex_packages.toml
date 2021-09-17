@@ -46,6 +46,12 @@ github_repo = "litescope"
 git_revision = "08072a78ba1157d106d305bdc93cd9c5d35bab98"
 github_archive_nix_hash = "112370chh6vbiiiay20h7h5mdxwackxlqpvmq7s5d5l16c0mdzp7"
 
+[litesdcard]
+github_user = "enjoy-digital"
+github_repo = "litesdcard"
+git_revision = "4edf05e627a8b5f03e632215accec8ab588737e3"
+github_archive_nix_hash = "IfD6wYT3+b/bY+LwktDIrcO+kbbVi+oeHeK3Qiitcbw="
+
 [litespi]
 github_user = "litex-hub"
 github_repo = "litespi"

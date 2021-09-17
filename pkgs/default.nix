@@ -143,6 +143,12 @@ let
           };
         };
 
+        litesdcard = pkgs.callPackage (
+          import ./litesdcard.nix pkgMetas.litesdcard checked
+        ) {
+          litex = self.litex;
+        };
+
         litescope = pkgs.callPackage (
           import ./litescope.nix pkgMetas.litescope checked
         ) {
