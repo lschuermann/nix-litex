@@ -25,7 +25,7 @@ in
 
 # pkgMetas: Metadata for the packages such that you can control which revisions
 # are used. If not specified, the versions will be taken from `litex_packages.toml`.
-{ pkgs, skipChecks ? true, pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml) }:
+{ pkgs, pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml) }:
 
 let
   lib = pkgs.lib;
