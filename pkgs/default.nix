@@ -55,7 +55,7 @@ let
       argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
       args = builtins.foldl' (acc: name: acc // { ${name} = self.${"${name}-unchecked"}; }) {} argNames;
       maker = attrs: self.buildPythonPackage (attrs // {
-        name = "${attrs.pname}-pkg";
+        pname = "${attrs.pname}-pkg";
         doCheck = false;
       });
     in
@@ -68,7 +68,7 @@ let
       argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
       args = builtins.foldl' (acc: name: acc // { ${name} = self.${"${name}-unchecked"}; }) {} argNames;
       maker = attrs: self.buildPythonPackage (attrs // {
-        name = "${attrs.pname}-test";
+        pname = "${attrs.pname}-test";
         installPhase = "mkdir $out";
       });
     in
@@ -79,19 +79,23 @@ let
     let
       f = import (./. + "/${name}.nix") pkgMetas.${name};
       argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
+      pkg = self.${"${name}-unchecked"};
+      passthru = [ "pname" "version" "meta" ];
+      args = {
+        src = pkgs.linkFarm "empty" [];
+
+        nativeBuildInputs = builtins.foldl' (acc: name: acc ++ [ self.${"${name}-test"} ]) [ self.${"${name}-test"} ] argNames;
+
+        installPhase = ''
+          ln -s ${pkg} $out
+          runHook postInstall
+        '';
+      };
     in
-    self.buildPythonPackage {
-      inherit name;
-
-      src = pkgs.linkFarm "empty" [];
-
-      nativeBuildInputs = builtins.foldl' (acc: name: acc ++ [ self.${"${name}-test"} ]) [ self.${"${name}-test"} ] argNames;
-
-      installPhase = ''
-        ln -s ${self.${"${name}-unchecked"}} $out
-        runHook postInstall
-      '';
-    };
+    self.buildPythonPackage (
+      builtins.foldl'
+        (acc: elem: acc // (if pkg ? ${elem} then { ${elem} = pkg.${elem}; } else {}))
+        args passthru);
 
   # Overlay for python packages.
   pythonOverlay = self: super:
