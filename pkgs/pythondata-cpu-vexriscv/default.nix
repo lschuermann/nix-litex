@@ -99,7 +99,7 @@ in
 
     src = fetchurl {
       url = "https://github.com/lschuermann/litex-vexriscv-custom/releases/download/${buildid}/generated.tar.gz";
-      sha256 = "1hm0x9ss0frcy6wy65chnqvqln6bbb048jd388fcx98hll94d6xs";
+      sha256 = "J/q6LbsiZMCtY5HSr4i/yGe3UJmD2++h8BaBRAKgS1E=";
     };
 
     doCheck = false;
