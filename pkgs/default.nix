@@ -25,7 +25,7 @@ in
 
 # pkgMetas: Metadata for the packages such that you can control which revisions
 # are used. If not specified, the versions will be taken from `litex_packages.toml`.
-{ pkgs, pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml) }:
+{ pkgs, skipChecks ? false, pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml) }:
 
 let
   lib = pkgs.lib;
@@ -84,7 +84,9 @@ let
       args = {
         src = pkgs.linkFarm "empty" [];
 
-        nativeBuildInputs = builtins.foldl' (acc: name: acc ++ [ self.${"${name}-test"} ]) [ self.${"${name}-test"} ] argNames;
+        nativeBuildInputs = if skipChecks
+          then []
+          else builtins.foldl' (acc: name: acc ++ [ self.${"${name}-test"} ]) [ self.${"${name}-test"} ] argNames;
 
         installPhase = ''
           ln -s ${pkg} $out
