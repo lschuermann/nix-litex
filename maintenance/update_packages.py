@@ -71,7 +71,7 @@ for pname, package in meta.items():
                     url = "https://github.com/{}/{}/archive/{}.tar.gz".format(
                         github_user,
                         github_repo,
-                        git_revision,
+                        head,
                     )
                     prefetchHash = subprocess.check_output([
                         "nix-prefetch-url",
