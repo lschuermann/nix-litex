@@ -5,9 +5,14 @@ import subprocess
 import tempfile
 import toml
 from git import Repo
+from argparse import ArgumentParser
 
 update_all_hashes = False
 package_meta_file = "pkgs/litex_packages.toml"
+
+parser = ArgumentParser()
+parser.add_argument("-d", "--date", dest="date", default="9999-01-01", help="use last commit before DATE", metavar="DATE")
+args = parser.parse_args()
 
 def prompt(message):
     reply = str(input("{} [y/n] ".format(message))).lower().strip()
@@ -41,15 +46,14 @@ for pname, package in meta.items():
             print("Checking for a new revision on the master branch of {}/{}".format(github_user, github_repo))
             r = Repo.clone_from("https://github.com/{}/{}.git".format(github_user, github_repo), tmpdir)
 
-            head = r.commit('master')
+            head = next(r.iter_commits("master", None, before=args.date))
             pinned = r.commit(git_revision)
 
             commit_count_diff = head.count() - pinned.count()
-            assert commit_count_diff >= 0
 
             update_hash = False
 
-            if commit_count_diff > 0:
+            if commit_count_diff != 0:
                 print("Current head has {} more commits:".format(commit_count_diff))
                 print("  {}\n  \"{}\"\n  -- {}".format(head.tree, head.summary, head.authored_datetime))
                 print("  vs")
