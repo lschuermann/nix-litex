@@ -11,10 +11,14 @@ update_all_hashes = False
 package_meta_file = "pkgs/litex_packages.toml"
 
 parser = ArgumentParser()
-parser.add_argument("-d", "--date", dest="date", default="9999-01-01", help="use last commit before DATE", metavar="DATE")
+parser.add_argument("-d", "--date", dest="date", default=None, help="use last commit before DATE", metavar="DATE")
+parser.add_argument("-y", "--yes", dest="yes", action="store_true", help="\"yes\" to all prompts")
 args = parser.parse_args()
 
 def prompt(message):
+    if args.yes:
+      return True
+
     reply = str(input("{} [y/n] ".format(message))).lower().strip()
     if reply[0] == 'y':
         return True
@@ -46,7 +50,7 @@ for pname, package in meta.items():
             print("Checking for a new revision on the master branch of {}/{}".format(github_user, github_repo))
             r = Repo.clone_from("https://github.com/{}/{}.git".format(github_user, github_repo), tmpdir, filter="tree:0")
 
-            head = next(r.iter_commits("master", None, before=args.date))
+            head = next(r.iter_commits("master", None, before=args.date)) if args.date != None else r.commit("master")
             pinned = r.commit(git_revision)
 
             commit_count_diff = head.count() - pinned.count()
