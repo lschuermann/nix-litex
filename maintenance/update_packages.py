@@ -59,9 +59,9 @@ for pname, package in meta.items():
 
             if commit_count_diff != 0:
                 print("Current head has {} more commits:".format(commit_count_diff))
-                print("  {}\n  \"{}\"\n  -- {}".format(head.tree, head.summary, head.authored_datetime))
+                print("  {}\n  \"{}\"\n  -- {}".format(head, head.summary, head.authored_datetime))
                 print("  vs")
-                print("  {}\n  \"{}\"\n  -- {}".format(pinned.tree, pinned.summary, pinned.authored_datetime))
+                print("  {}\n  \"{}\"\n  -- {}".format(pinned, pinned.summary, pinned.authored_datetime))
                 if prompt("  -> Do you want to update?"):
                     meta[pname]["git_revision"] = str(head)
                     update_hash = True
