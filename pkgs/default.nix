@@ -57,6 +57,7 @@ let
       maker = attrs: self.buildPythonPackage (attrs // {
         pname = "${attrs.pname}-pkg";
         doCheck = false;
+        passthru._base_name = attrs.pname;
       });
     in
     self.callPackage f (args // { buildPythonPackage = maker; });
@@ -80,18 +81,31 @@ let
       f = import (./. + "/${name}.nix") pkgMetas.${name};
       argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
       pkg = self.${"${name}-unchecked"};
-      passthru = [ "pname" "version" "meta" ];
+      passthru = [ "meta" ];
       args = {
+        pname = pkg._base_name;
+        inherit (pkg) version;
+
         src = pkgs.linkFarm "empty" [];
 
         nativeBuildInputs = if skipChecks
           then []
           else builtins.foldl' (acc: name: acc ++ [ self.${"${name}-test"} ]) [ self.${"${name}-test"} ] argNames;
 
+        unpackPhase = "true";
+        patchPhase = "true";
+        configurePhase = "true";
+        buildPhase = "true";
+
         installPhase = ''
           ln -s ${pkg} $out
           runHook postInstall
         '';
+
+        fixupPhase = "true";
+        setupToolsCheckPhase = "true";
+
+        doCheck = false;
       };
     in
     self.buildPythonPackage (
