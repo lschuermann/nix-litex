@@ -44,7 +44,7 @@ for pname, package in meta.items():
             git_revision = package["git_revision"]
 
             print("Checking for a new revision on the master branch of {}/{}".format(github_user, github_repo))
-            r = Repo.clone_from("https://github.com/{}/{}.git".format(github_user, github_repo), tmpdir)
+            r = Repo.clone_from("https://github.com/{}/{}.git".format(github_user, github_repo), tmpdir, filter="tree:0")
 
             head = next(r.iter_commits("master", None, before=args.date))
             pinned = r.commit(git_revision)
