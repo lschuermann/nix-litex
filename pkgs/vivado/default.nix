@@ -1,6 +1,29 @@
-{ stdenv, bash, coreutils, writeScript, gnutar, gzip, requireFile, patchelf, procps, makeWrapper,
-  ncurses, zlib, libX11, libXrender, libxcb, libXext, libXtst,
-  libXi, glib, freetype, gtk2, buildFHSUserEnv, gcc, ncurses5, glibc }:
+{ stdenv
+, bash
+, coreutils
+, writeScript
+, gnutar
+, gzip
+, requireFile
+, patchelf
+, procps
+, makeWrapper
+, ncurses
+, zlib
+, libX11
+, libXrender
+, libxcb
+, libXext
+, libXtst
+, libXi
+, glib
+, freetype
+, gtk2
+, buildFHSUserEnv
+, gcc
+, ncurses5
+, glibc
+}:
 
 let
   extractedSource = stdenv.mkDerivation rec {
@@ -51,8 +74,14 @@ let
       stdenv.cc.cc
       ncurses
       zlib
-      libX11 libXrender libxcb libXext libXtst libXi
-      freetype gtk2
+      libX11
+      libXrender
+      libxcb
+      libXext
+      libXtst
+      libXi
+      freetype
+      gtk2
       glib
     ];
 
@@ -64,13 +93,17 @@ let
   };
 
 in
-  buildFHSUserEnv {
-    name = "vivado";
-    targetPkgs = _pkgs: [
-      vivadoPackage
-    ];
-    multiPkgs = pkgs: [
-      coreutils gcc ncurses5 zlib glibc.dev
-    ];
-    runScript = "vivado";
-  }
+buildFHSUserEnv {
+  name = "vivado";
+  targetPkgs = _pkgs: [
+    vivadoPackage
+  ];
+  multiPkgs = pkgs: [
+    coreutils
+    gcc
+    ncurses5
+    zlib
+    glibc.dev
+  ];
+  runScript = "vivado";
+}

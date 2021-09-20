@@ -1,6 +1,15 @@
 pkgMeta:
-{ lib, buildPythonPackage, fetchFromGitHub, python, migen, litex, litedram, liteeth, liteiclink
-, litepcie }:
+{ lib
+, buildPythonPackage
+, fetchFromGitHub
+, python
+, migen
+, litex
+, litedram
+, liteeth
+, liteiclink
+, litepcie
+}:
 
 buildPythonPackage rec {
   pname = "litex-boards";
@@ -27,11 +36,21 @@ buildPythonPackage rec {
   # This will try to import every target and thus fail if a dependency
   # cannot be resolved.
   checkInputs = [
-    migen litex litedram liteeth liteiclink litepcie
+    migen
+    litex
+    litedram
+    liteeth
+    liteiclink
+    litepcie
   ];
 
   propagatedBuildInputs = [
-    migen litex litedram liteeth liteiclink litepcie
+    migen
+    litex
+    litedram
+    liteeth
+    liteiclink
+    litepcie
   ];
 
   doCheck = true;

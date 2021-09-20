@@ -13,7 +13,8 @@ buildPythonPackage rec {
   };
 
   buildInputs = [
-    litex migen
+    litex
+    migen
   ];
 
   doCheck = true;

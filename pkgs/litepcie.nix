@@ -1,6 +1,17 @@
 pkgMeta:
-{ lib, buildPythonPackage, fetchFromGitHub, litex, pyyaml, migen, litex-boards, litedram, liteeth
-, litespi, litehyperbus, liteiclink }:
+{ lib
+, buildPythonPackage
+, fetchFromGitHub
+, litex
+, pyyaml
+, migen
+, litex-boards
+, litedram
+, liteeth
+, litespi
+, litehyperbus
+, liteiclink
+}:
 
 buildPythonPackage rec {
   pname = "litepcie";
@@ -20,7 +31,12 @@ buildPythonPackage rec {
   ];
 
   checkInputs = [
-    litex-boards litedram liteeth litespi litehyperbus liteiclink
+    litex-boards
+    litedram
+    liteeth
+    litespi
+    litehyperbus
+    liteiclink
   ];
 
   doCheck = true;

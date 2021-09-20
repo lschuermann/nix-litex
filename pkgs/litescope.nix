@@ -1,9 +1,21 @@
 pkgMeta:
-{ lib, buildPythonPackage, fetchFromGitHub, pkgsCross, litex, litex-boards, liteiclink, litedram
-, liteeth, litepcie, litespi, litehyperbus, pythondata-cpu-vexriscv }:
+{ lib
+, buildPythonPackage
+, fetchFromGitHub
+, pkgsCross
+, litex
+, litex-boards
+, liteiclink
+, litedram
+, liteeth
+, litepcie
+, litespi
+, litehyperbus
+, pythondata-cpu-vexriscv
+}:
 
 buildPythonPackage rec {
-  pname = "litescope" ;
+  pname = "litescope";
   version = pkgMeta.git_revision;
 
   src = fetchFromGitHub {
@@ -18,7 +30,15 @@ buildPythonPackage rec {
   ];
 
   checkInputs = [
-    litex litex-boards liteiclink litedram liteeth litepcie litespi litehyperbus pythondata-cpu-vexriscv
+    litex
+    litex-boards
+    liteiclink
+    litedram
+    liteeth
+    litepcie
+    litespi
+    litehyperbus
+    pythondata-cpu-vexriscv
     pkgsCross.riscv64.buildPackages.gcc
   ];
 

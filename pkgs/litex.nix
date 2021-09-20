@@ -1,7 +1,16 @@
 pkgMeta:
-{ lib, fetchFromGitHub, buildPythonPackage, pythondata-software-compiler_rt
-, pyserial, migen, requests, colorama, litedram, pythondata-cpu-vexriscv
-, runCommand }:
+{ lib
+, fetchFromGitHub
+, buildPythonPackage
+, pythondata-software-compiler_rt
+, pyserial
+, migen
+, requests
+, colorama
+, litedram
+, pythondata-cpu-vexriscv
+, runCommand
+}:
 
 buildPythonPackage rec {
   pname = "litex";
@@ -19,11 +28,15 @@ buildPythonPackage rec {
     # package
     pythondata-software-compiler_rt
 
-    pyserial migen requests colorama
+    pyserial
+    migen
+    requests
+    colorama
   ];
 
   checkInputs = [
-    litedram pythondata-cpu-vexriscv
+    litedram
+    pythondata-cpu-vexriscv
   ];
 
   doCheck = true;

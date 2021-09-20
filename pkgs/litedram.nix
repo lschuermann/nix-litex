@@ -1,9 +1,31 @@
 pkgMeta:
-{ lib, fetchFromGitHub, pkgsCross, gnumake, libevent, zlib
-, pandas, numpy, matplotlib, migen, buildPythonPackage
-, litex, pytest, pyyaml, pexpect, pythondata-cpu-serv, pythondata-cpu-vexriscv
-, litescope , pythondata-misc-tapcfg, litex-boards, liteeth, liteiclink, litepcie
-, verilator, json_c, zeromq, runCommand
+{ lib
+, fetchFromGitHub
+, pkgsCross
+, gnumake
+, libevent
+, zlib
+, pandas
+, numpy
+, matplotlib
+, migen
+, buildPythonPackage
+, litex
+, pytest
+, pyyaml
+, pexpect
+, pythondata-cpu-serv
+, pythondata-cpu-vexriscv
+, litescope
+, pythondata-misc-tapcfg
+, litex-boards
+, liteeth
+, liteiclink
+, litepcie
+, verilator
+, json_c
+, zeromq
+, runCommand
 }:
 
 buildPythonPackage rec {
@@ -18,7 +40,9 @@ buildPythonPackage rec {
   };
 
   buildInputs = [
-    litex pyyaml migen
+    litex
+    pyyaml
+    migen
   ];
 
   checkPhase = ''
@@ -39,18 +63,35 @@ buildPythonPackage rec {
 
   checkInputs = [
     # For test summary
-    pandas numpy matplotlib
+    pandas
+    numpy
+    matplotlib
 
     # Proper check inputs. Some of these are really only required
     # because litex-boards needs them for importing all targets in its
     # __init__.py.
-    litex pytest pyyaml pexpect pythondata-cpu-serv pythondata-cpu-vexriscv litescope
-    pythondata-misc-tapcfg litex-boards liteeth liteiclink litepcie
+    litex
+    pytest
+    pyyaml
+    pexpect
+    pythondata-cpu-serv
+    pythondata-cpu-vexriscv
+    litescope
+    pythondata-misc-tapcfg
+    litex-boards
+    liteeth
+    liteiclink
+    litepcie
 
     # For running the litex_sim (part of the dependencies for that are
     # already listed above). The gcc will pull in various libraries,
     # as this is not a full stdenv in the checkPhase.
-    verilator gnumake libevent.dev json_c zlib zeromq
+    verilator
+    gnumake
+    libevent.dev
+    json_c
+    zlib
+    zeromq
 
     # It doesn't really matter which cross-compilation toolchain is
     # used here. This choice seems to be built by Hydra so that should
