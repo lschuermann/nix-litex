@@ -128,9 +128,13 @@ let
       testedPkgs
     // {
       litevideo =
-        self.callPackage (import ./litevideo.nix pkgMetas.litevideo) { };
+        self.callPackage (import ./litevideo.nix pkgMetas.litevideo) {
+          litex = self.litex-unchecked;
+        };
       valentyusb-hw_cdc_eptri =
-        self.callPackage (import ./valentyusb/valentyusb-hw_cdc_eptri.nix pkgMetas.valentyusb-hw_cdc_eptri) { };
+        self.callPackage (import ./valentyusb/valentyusb-hw_cdc_eptri.nix pkgMetas.valentyusb-hw_cdc_eptri) {
+          litex = self.litex-unchecked;
+        };
       pythondata-cpu-vexriscv =
         self.callPackage (import ./pythondata-cpu-vexriscv) { };
       pythondata-misc-tapcfg =

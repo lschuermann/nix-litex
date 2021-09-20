@@ -25,7 +25,6 @@ pkgMeta:
 , verilator
 , json_c
 , zeromq
-, runCommand
 }:
 
 buildPythonPackage rec {
@@ -58,7 +57,13 @@ buildPythonPackage rec {
       -L${zlib}/lib \
       -L${zeromq}/lib \
       $NIX_LDFLAGS"
-    pytest -v test/
+
+    # TestExamples::test_genesys2 currently overruns the BIOS ROM
+    # size, so deselect this test
+    pytest -v -k 'not test_genesys2' test/
+
+    # Expect the deselected test_genesys2 test to fail
+    ! pytest -v -k 'test_genesys2' test/test_examples.py
   '';
 
   checkInputs = [
@@ -99,10 +104,5 @@ buildPythonPackage rec {
     pkgsCross.riscv64.buildPackages.gcc
   ];
 
-  # Checks are currently disabled, as there is a BIOS size overrun for
-  # one tested board. Should be reenabled on the next test. One may
-  # also experiment with custom compiler / glibc (newlib, etc.)
-  # options and see whether they have any effect or are used by the
-  # BIOS.
-  doCheck = false;
+  doCheck = true;
 }
