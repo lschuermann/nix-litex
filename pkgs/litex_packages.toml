@@ -58,6 +58,12 @@ github_repo = "litespi"
 git_revision = "84975fdcacc8666e4571a4a447d78ddd0a9efcfc"
 github_archive_nix_hash = "0wsprim79l6vfaaxg7plbrfdllhb6p5ra6wkl0hnmfqy7s6ndqx5"
 
+[litevideo]
+github_user = "enjoy-digital"
+github_repo = "litevideo"
+git_revision = "41f30143075ece3fff5c33a332ed067d1837cbb3"
+github_archive_nix_hash = "06vw4rn8xby8is13275bmkrxlwp3wlznbdqfay78a5m8bp73kypy"
+
 [pythondata-misc-tapcfg]
 github_user = "litex-hub"
 github_repo = "pythondata-misc-tapcfg"
@@ -75,3 +81,9 @@ github_user = "litex-hub"
 github_repo = "pythondata-cpu-serv"
 git_revision = "da5ad1e992e1a61926ad513b6f88b3a16867b5b9"
 github_archive_nix_hash = "0awqylqj11nkzashk3wlbjl8d8lx7a3lxaa304jrbgn6zr13x1xx"
+
+[valentyusb-hw_cdc_eptri]
+github_user = "litex-hub"
+github_repo = "valentyusb"
+git_revision = "912d8e6dc72d45e092e608ffcaabfeaaa6d4580f"
+github_archive_nix_hash = "0c3zmhydbwd5vdmxlrbyc8iasf2ai28brm0fnkxrp4w5w1gd9ja6"

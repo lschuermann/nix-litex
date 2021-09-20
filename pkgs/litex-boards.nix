@@ -9,6 +9,12 @@ pkgMeta:
 , liteeth
 , liteiclink
 , litepcie
+, pythondata-cpu-vexriscv
+, litespi
+, litehyperbus
+, valentyusb-hw_cdc_eptri
+, litevideo
+, litescope
 }:
 
 buildPythonPackage rec {
@@ -35,15 +41,6 @@ buildPythonPackage rec {
   #
   # This will try to import every target and thus fail if a dependency
   # cannot be resolved.
-  checkInputs = [
-    migen
-    litex
-    litedram
-    liteeth
-    liteiclink
-    litepcie
-  ];
-
   propagatedBuildInputs = [
     migen
     litex
@@ -51,6 +48,12 @@ buildPythonPackage rec {
     liteeth
     liteiclink
     litepcie
+    litehyperbus
+    pythondata-cpu-vexriscv
+    litespi
+    valentyusb-hw_cdc_eptri
+    litevideo
+    litescope
   ];
 
   doCheck = true;

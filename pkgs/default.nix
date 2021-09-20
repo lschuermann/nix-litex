@@ -127,6 +127,10 @@ let
       { }
       testedPkgs
     // {
+      litevideo =
+        self.callPackage (import ./litevideo.nix pkgMetas.litevideo) { };
+      valentyusb-hw_cdc_eptri =
+        self.callPackage (import ./valentyusb/valentyusb-hw_cdc_eptri.nix pkgMetas.valentyusb-hw_cdc_eptri) { };
       pythondata-cpu-vexriscv =
         self.callPackage (import ./pythondata-cpu-vexriscv) { };
       pythondata-misc-tapcfg =
@@ -161,6 +165,8 @@ let
       (
         builtins.concatLists (builtins.map (x: [ "${x}-unchecked" "${x}-test" x ]) testedPkgs)
         ++ [
+          "litevideo"
+          "valentyusb-hw_cdc_eptri"
           "pythondata-cpu-vexriscv"
           "pythondata-misc-tapcfg"
           "pythondata-software-compiler_rt"

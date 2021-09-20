@@ -1,0 +1,21 @@
+From 34a9c993f133e90df26f1b2a9bb876083c8065c1 Mon Sep 17 00:00:00 2001
+From: Leon Schuermann <leon@is.currently.online>
+Date: Mon, 20 Sep 2021 14:05:26 +0200
+Subject: [PATCH 2/2] Add __init__.py files to modules
+
+---
+ valentyusb/__init__.py       | 0
+ valentyusb/utils/__init__.py | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 valentyusb/__init__.py
+ create mode 100644 valentyusb/utils/__init__.py
+
+diff --git a/valentyusb/__init__.py b/valentyusb/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/valentyusb/utils/__init__.py b/valentyusb/utils/__init__.py
+new file mode 100644
+index 0000000..e69de29
+-- 
+2.31.1
+
