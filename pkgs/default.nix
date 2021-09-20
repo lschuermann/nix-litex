@@ -46,13 +46,30 @@ let
     "litescope"
     "litesdcard"
     "litespi"
+    "litevideo"
+    {
+      name = "valentyusb-hw_cdc_eptri";
+      path = ./valentyusb/valentyusb-hw_cdc_eptri.nix;
+    }
   ];
+
+  testedPkgsNames =
+    builtins.map (pkg: if (lib.isString pkg) then pkg else pkg.name) testedPkgs;
+
+  testedPkgsPaths =
+    builtins.listToAttrs (
+      builtins.map
+        (pkg:
+          if (lib.isString pkg)
+          then (lib.nameValuePair pkg (./. + "/${pkg}.nix"))
+          else (lib.nameValuePair pkg.name pkg.path))
+        testedPkgs);
 
   # Make an unchecked package
   makeUnchecked = self: name:
     let
-      f = import (./. + "/${name}.nix") pkgMetas.${name};
-      argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
+      f = import testedPkgsPaths."${name}" pkgMetas.${name};
+      argNames = lib.intersectLists testedPkgsNames (builtins.attrNames (lib.functionArgs f));
       args = builtins.foldl' (acc: name: acc // { ${name} = self.${"${name}-unchecked"}; }) { } argNames;
       maker = attrs: self.buildPythonPackage (attrs // {
         pname = "${attrs.pname}-pkg";
@@ -65,11 +82,11 @@ let
   # Make a test for the package
   makeTest = self: name:
     let
-      f = import (./. + "/${name}.nix") pkgMetas.${name};
-      argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
+      f = import testedPkgsPaths."${name}" pkgMetas.${name};
+      argNames = lib.intersectLists testedPkgsNames (builtins.attrNames (lib.functionArgs f));
       args = builtins.foldl' (acc: name: acc // { ${name} = self.${"${name}-unchecked"}; }) { } argNames;
       maker = attrs: self.buildPythonPackage (attrs // {
-        pname = "${attrs.pname}-test";
+        pname = "${attrs.pname}-${if attrs.doCheck then "test" else "untested" }";
         installPhase = "mkdir $out";
       });
     in
@@ -78,8 +95,8 @@ let
   # Forward the unchecked package but depend on tests
   makeFinal = self: name:
     let
-      f = import (./. + "/${name}.nix") pkgMetas.${name};
-      argNames = lib.intersectLists testedPkgs (builtins.attrNames (lib.functionArgs f));
+      f = import testedPkgsPaths."${name}" pkgMetas.${name};
+      argNames = lib.intersectLists testedPkgsNames (builtins.attrNames (lib.functionArgs f));
       pkg = self.${"${name}-unchecked"};
       passthru = [ "meta" ];
       args = {
@@ -125,16 +142,8 @@ let
         "${name}" = makeFinal self name;
       })
       { }
-      testedPkgs
+      testedPkgsNames
     // {
-      litevideo =
-        self.callPackage (import ./litevideo.nix pkgMetas.litevideo) {
-          litex = self.litex-unchecked;
-        };
-      valentyusb-hw_cdc_eptri =
-        self.callPackage (import ./valentyusb/valentyusb-hw_cdc_eptri.nix pkgMetas.valentyusb-hw_cdc_eptri) {
-          litex = self.litex-unchecked;
-        };
       pythondata-cpu-vexriscv =
         self.callPackage (import ./pythondata-cpu-vexriscv) { };
       pythondata-misc-tapcfg =
@@ -167,10 +176,8 @@ let
       })
       { }
       (
-        builtins.concatLists (builtins.map (x: [ "${x}-unchecked" "${x}-test" x ]) testedPkgs)
+        builtins.concatLists (builtins.map (x: [ "${x}-unchecked" "${x}-test" x ]) testedPkgsNames)
         ++ [
-          "litevideo"
-          "valentyusb-hw_cdc_eptri"
           "pythondata-cpu-vexriscv"
           "pythondata-misc-tapcfg"
           "pythondata-software-compiler_rt"
