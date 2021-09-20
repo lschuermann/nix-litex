@@ -1,0 +1,26 @@
+name: nix-litex-ci
+on:
+  pull_request:
+  push:
+jobs:
+  ci-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.4
+
+    - uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+
+    - run: nix-build --arg skipChecks false --arg pkgs 'import <nixpkgs> {}' -A packages pkgs/default.nix
+
+  ci-check-fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.4
+
+    - uses: cachix/install-nix-action@v12
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+
+    - run: nix-shell -p nixpkgs-fmt --run "nixpkgs-fmt --check ."

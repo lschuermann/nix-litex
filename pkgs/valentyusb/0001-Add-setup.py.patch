@@ -1,0 +1,49 @@
+From 16b5313bd7fc3d996d304ebb8f6ce4a09fd1b3c7 Mon Sep 17 00:00:00 2001
+From: Leon Schuermann <leon@is.currently.online>
+Date: Mon, 20 Sep 2021 14:04:43 +0200
+Subject: [PATCH 1/2] Add setup.py
+
+---
+ setup.py | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 setup.py
+
+diff --git a/setup.py b/setup.py
+new file mode 100644
+index 0000000..2720619
+--- /dev/null
++++ b/setup.py
+@@ -0,0 +1,28 @@
++#!/usr/bin/env python3
++
++import sys
++from setuptools import setup
++from setuptools import find_packages
++
++setup(
++    name="valentyusb",
++    version="git-912d8e6dc72d45",
++    description="FPGA USB stack written in LiteX",
++    long_description=open("README.md").read(),
++    author="Sean Cross",
++    author_email="sean@xobs.io",
++    url="https://github.com/im-tomu/valentyusb",
++    download_url="https://github.com/im-tomu/valentyusb",
++    license="BSD",
++    platforms=["Any"],
++    keywords=["HDL", "FPGA", "USB"],
++    classifiers=[
++        "Development Status :: Alpha",
++        "Intended Audience :: Developers",
++        "License :: OSI Approved :: BSD License",
++        "Operating System :: OS Independent",
++        "Programming Language :: Python",
++    ],
++    packages=find_packages(exclude=("test-suite*", "sim*", "docs*")),
++    install_requires=["litex"],
++)
+
+base-commit: 912d8e6dc72d45e092e608ffcaabfeaaa6d4580f
+-- 
+2.31.1
+
