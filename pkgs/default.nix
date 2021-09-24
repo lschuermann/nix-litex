@@ -75,6 +75,7 @@ let
         pname = "${attrs.pname}-pkg";
         doCheck = false;
         passthru._base_name = attrs.pname;
+        passthru._src = attrs.src;
       });
     in
     self.callPackage f (args // { buildPythonPackage = maker; });
@@ -103,7 +104,7 @@ let
         pname = pkg._base_name;
         inherit (pkg) version;
 
-        src = pkgs.linkFarm "empty" [ ];
+        src = pkg._src;
 
         nativeBuildInputs =
           if skipChecks
