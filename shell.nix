@@ -42,9 +42,7 @@ pkgs.mkShell {
     icestorm
 
     # For executing the maintenance scripts of this repository
-    python3
-    python3Packages.toml
-    python3Packages.GitPython
+    maintenance
 
     # For LiteX development
     python3Packages.pytest
