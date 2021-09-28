@@ -8,12 +8,16 @@ from git import Repo
 from argparse import ArgumentParser
 
 update_all_hashes = False
-package_meta_file = "pkgs/litex_packages.toml"
 
 parser = ArgumentParser()
 parser.add_argument("-d", "--date", dest="date", default=None, help="use last commit before DATE", metavar="DATE")
 parser.add_argument("-y", "--yes", dest="yes", action="store_true", help="\"yes\" to all prompts")
+parser.add_argument("pkg_meta_file",
+                    help="Path to the TOML file containing the package metadata",
+                    default="./pkgs/litex_packages.toml")
 args = parser.parse_args()
+
+package_meta_file = args.pkg_meta_file
 
 def prompt(message):
     if args.yes:
@@ -87,5 +91,5 @@ for pname, package in meta.items():
                     print("...got hash {}".format(prefetchHash))
                     meta[pname]["github_archive_nix_hash"] = prefetchHash
 
-with open("newtoml", "w") as newfile:
+with open(package_meta_file, "w") as newfile:
     toml.dump(meta, newfile)

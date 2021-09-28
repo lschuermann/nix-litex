@@ -184,5 +184,34 @@ let
           "pythondata-cpu-serv"
         ]
       );
+
+  # Build a special "maintainance" package which contains tools to
+  # work with the TOML-based pkgMetas definition
+  maintenance = pkgs.python3Packages.buildPythonPackage {
+    pname = "nix-litex-maintenance";
+    version = "none";
+
+    # Simply include the entire /maintenance directory as the
+    # source. It is only a loose collection of (Python scripts), which
+    # will be copied to the $out/bin path in the installPhase.
+    src = ../maintenance;
+    format = "other";
+
+    buildInputs = [
+      pkgs.python3Packages.toml
+      pkgs.python3Packages.GitPython
+    ];
+
+    installPhase = ''
+      mkdir -p $out/bin/
+      cp *.py $out/bin/
+      chmod +x $out/bin/*
+    '';
+  };
+
 in
-pkgSet // { inherit overlay pythonOverlay; packages = pkgSet; nixpkgsExtended = extended; }
+pkgSet // {
+  inherit overlay pythonOverlay maintenance;
+  packages = pkgSet;
+  nixpkgsExtended = extended;
+}
