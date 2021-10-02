@@ -189,8 +189,7 @@ let
   # Build a special "maintainance" package which contains tools to
   # work with the TOML-based pkgMetas definition
   maintenance = pkgs.python3Packages.buildPythonPackage {
-    pname = "nix-litex-maintenance";
-    version = "none";
+    name = "nix-litex-maintenance";
 
     # Simply include the entire /maintenance directory as the
     # source. It is only a loose collection of (Python scripts), which
