@@ -36,7 +36,7 @@ buildPythonPackage rec {
     litespi
     litehyperbus
     pythondata-cpu-vexriscv
-    pkgsCross.riscv64.buildPackages.gcc
+    pkgsCross.riscv64-embedded.buildPackages.gcc
   ];
 
   doCheck = true;

@@ -35,7 +35,10 @@ let
   });
 
   testedPkgs = [
-    "litex"
+    {
+      name = "litex";
+      path = ./litex;
+    }
     "litedram"
     "litex-boards"
     "liteeth"
@@ -172,6 +175,8 @@ let
         self.callPackage (import ./pythondata-software-compiler_rt.nix pkgMetas.pythondata-software-compiler_rt) { };
       pythondata-cpu-serv =
         self.callPackage (import ./pythondata-cpu-serv.nix pkgMetas.pythondata-cpu-serv) { };
+      pythondata-software-picolibc =
+        self.callPackage (import ./pythondata-software-picolibc.nix pkgMetas.pythondata-software-picolibc) { };
     };
 
   applyOverlay = python: python.override {
@@ -202,6 +207,7 @@ let
           "pythondata-misc-tapcfg"
           "pythondata-software-compiler_rt"
           "pythondata-cpu-serv"
+          "pythondata-software-picolibc"
         ]
       );
 

@@ -55,12 +55,7 @@ buildPythonPackage rec {
       -L${zeromq}/lib \
       $NIX_LDFLAGS"
 
-    # TestExamples::test_genesys2 currently overruns the BIOS ROM
-    # size, so deselect this test
-    pytest -v -k 'not test_genesys2' test/
-
-    # Expect the deselected test_genesys2 test to fail
-    ! pytest -v -k 'test_genesys2' test/test_examples.py
+    pytest -v test/
   '';
 
   checkInputs = [
@@ -95,10 +90,10 @@ buildPythonPackage rec {
     zlib
     zeromq
 
-    # It doesn't really matter which cross-compilation toolchain is
-    # used here. This choice seems to be built by Hydra so that should
-    # be the fastest one to have available on most systems.
-    pkgsCross.riscv64.buildPackages.gcc
+    # Some cross compilations seem to have issues when linking
+    # picolibc. This one seems to work, but may or may not be built by
+    # Hydra.
+    pkgsCross.riscv64-embedded.buildPackages.gcc
   ];
 
   doCheck = true;

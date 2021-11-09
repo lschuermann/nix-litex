@@ -1,0 +1,27 @@
+From 26535540775ccf9991a32e488a405edc15b3f8ca Mon Sep 17 00:00:00 2001
+From: Leon Schuermann <leon@is.currently.online>
+Date: Mon, 8 Nov 2021 14:56:40 +0100
+Subject: [PATCH] picolibc: allow building with meson 0.57
+
+---
+ litex/soc/integration/builder.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/litex/soc/integration/builder.py b/litex/soc/integration/builder.py
+index 1ea772ca..1e4e4983 100644
+--- a/litex/soc/integration/builder.py
++++ b/litex/soc/integration/builder.py
+@@ -236,7 +236,7 @@ class Builder:
+         meson_present   = (shutil.which("meson") is not None)
+         meson_version   = [0, 0, 0]
+         meson_major_min = 0
+-        meson_minor_min = 59
++        meson_minor_min = 57
+         if meson_present:
+             meson_version = subprocess.check_output(["meson", "-v"]).decode("utf-8").split(".")
+         if (not meson_present) or (int(meson_version[0]) < meson_major_min) or (int(meson_version[1]) < meson_minor_min):
+
+base-commit: 08af5be80c778d0ee45a0cde986bb4f9ece98fe8
+-- 
+2.33.0
+
