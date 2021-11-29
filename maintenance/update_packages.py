@@ -7,8 +7,6 @@ import toml
 from git import Repo
 from argparse import ArgumentParser
 
-update_all_hashes = False
-
 parser = ArgumentParser()
 parser.add_argument("-d", "--date", dest="date", default=None, help="use last commit before DATE", metavar="DATE")
 parser.add_argument("-y", "--yes", dest="yes", action="store_true", help="\"yes\" to all prompts")
@@ -59,8 +57,6 @@ for pname, package in meta.items():
 
             commit_count_diff = head.count() - pinned.count()
 
-            update_hash = False
-
             if commit_count_diff != 0:
                 print("Current head has {} more commits:".format(commit_count_diff))
                 print("  {}\n  \"{}\"\n  -- {}".format(head, head.summary, head.authored_datetime))
@@ -68,28 +64,6 @@ for pname, package in meta.items():
                 print("  {}\n  \"{}\"\n  -- {}".format(pinned, pinned.summary, pinned.authored_datetime))
                 if prompt("  -> Do you want to update?"):
                     meta[pname]["git_revision"] = str(head)
-                    update_hash = True
-
-            if update_all_hashes and not update_hash:
-                print("No new revision available, but told to update the hash anyways.")
-                update_hash = True
-
-            if update_hash:
-                    print("Okay, obtaining Nix hash for {}...".format(pname))
-                    url = "https://github.com/{}/{}/archive/{}.tar.gz".format(
-                        github_user,
-                        github_repo,
-                        head,
-                    )
-                    prefetchHash = subprocess.check_output([
-                        "nix-prefetch-url",
-                        "--type",
-                        "sha256",
-                        "--unpack",
-                        url,
-                    ]).decode("utf-8").strip()
-                    print("...got hash {}".format(prefetchHash))
-                    meta[pname]["github_archive_nix_hash"] = prefetchHash
 
 with open(package_meta_file, "w") as newfile:
     toml.dump(meta, newfile)
