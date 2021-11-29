@@ -49,10 +49,27 @@ for pname, package in meta.items():
             github_repo = package["github_repo"]
             git_revision = package["git_revision"]
 
-            print("Checking for a new revision on the master branch of {}/{}".format(github_user, github_repo))
-            r = Repo.clone_from("https://github.com/{}/{}.git".format(github_user, github_repo), tmpdir, filter="tree:0", bare=True)
+            print("Checking for a new revision on the {} branch of {}/{}".format(
+                package["git_branch"] if "git_branch" in package else "default",
+                github_user,
+                github_repo,
+            ))
+            r = Repo.clone_from(
+                "https://github.com/{}/{}.git".format(github_user, github_repo),
+                tmpdir,
+                filter="tree:0",
+                bare=True
+            )
 
-            head = next(r.iter_commits("master", None, before=args.date)) if args.date != None else r.commit("master")
+            git_branch = \
+                package["git_branch"] \
+                if "git_branch" in package else \
+                str(r.active_branch)
+
+            head = \
+                next(r.iter_commits(git_branch, None, before=args.date)) \
+                if args.date != None else \
+                r.commit(git_branch)
             pinned = r.commit(git_revision)
 
             commit_count_diff = head.count() - pinned.count()
