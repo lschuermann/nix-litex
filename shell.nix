@@ -28,6 +28,7 @@ pkgs.mkShell {
     pythondata-cpu-vexriscv
     pkgsCross.riscv64.buildPackages.gcc
     gnumake
+    python3Packages.pyvcd
 
     # For simulation
     pythondata-misc-tapcfg

@@ -35,7 +35,10 @@ let
   });
 
   testedPkgs = [
-    "litex"
+    {
+      name = "litex";
+      path = ./litex;
+    }
     "litedram"
     "litex-boards"
     "liteeth"
@@ -88,7 +91,26 @@ let
       args = builtins.foldl' (acc: name: acc // { ${name} = self.${"${name}-unchecked"}; }) { } argNames;
       maker = attrs: self.buildPythonPackage (attrs // {
         pname = "${attrs.pname}-${if attrs.doCheck then "test" else "untested" }";
-        installPhase = "mkdir $out";
+
+        # It's important that we don't provide any packages as part of this
+        # derivation's output to avoid errors such as the following:
+        #
+        #    Package duplicates found in closure, see above. Usually this
+        #    happens if two packages depend on different version of the same
+        #    dependency.
+        #
+        # However, we can't simply replace the installPhase by something else,
+        # because the checkPhase in buildPythonPackage is actually corresponding
+        # to the installCheckPhase of stdenv.mkDerivation.
+        #
+        # Thus our workaround here is to delete all contents of $out in the
+        # postCheck hook. Because that will be executed after the installPhase
+        # and checkPhase, the tests will have already run. However, the $out
+        # directory is still mutable.
+        postCheck = ''
+          rm -rf "$out"
+          mkdir -p "$out"
+        '';
       });
     in
     self.callPackage f (args // { buildPythonPackage = maker; });
@@ -153,6 +175,8 @@ let
         self.callPackage (import ./pythondata-software-compiler_rt.nix pkgMetas.pythondata-software-compiler_rt) { };
       pythondata-cpu-serv =
         self.callPackage (import ./pythondata-cpu-serv.nix pkgMetas.pythondata-cpu-serv) { };
+      pythondata-software-picolibc =
+        self.callPackage (import ./pythondata-software-picolibc.nix pkgMetas.pythondata-software-picolibc) { };
     };
 
   applyOverlay = python: python.override {
@@ -183,6 +207,7 @@ let
           "pythondata-misc-tapcfg"
           "pythondata-software-compiler_rt"
           "pythondata-cpu-serv"
+          "pythondata-software-picolibc"
         ]
       );
 

@@ -1,19 +1,15 @@
 pkgMeta:
-{ buildPythonPackage, litex, migen }:
+{ buildPythonPackage }:
 
 buildPythonPackage rec {
-  pname = "litevideo";
+  pname = "pythondata-software-picolibc";
   version = pkgMeta.git_revision;
 
   src = builtins.fetchGit {
     url = "https://github.com/${pkgMeta.github_user}/${pkgMeta.github_repo}";
     rev = pkgMeta.git_revision;
+    submodules = true;
   };
-
-  buildInputs = [
-    litex
-    migen
-  ];
 
   doCheck = false;
 }

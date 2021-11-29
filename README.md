@@ -9,6 +9,13 @@ manager. Development happens on [sr.ht](https://sr.ht):
 For questions, contributions and patches feel free to send an email to
 the mailing list.
 
+## Requirements
+
+- Nix: >= v2.4
+
+  On NixOS 21.05, this can be obtained by setting `nix.package =
+  pkgs.nixUnstable;`.
+
 ## Contributors
 
 - Leon Schuermann <leon@is.currently.online>

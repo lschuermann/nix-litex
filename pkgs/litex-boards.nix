@@ -1,7 +1,6 @@
 pkgMeta:
 { lib
 , buildPythonPackage
-, fetchFromGitHub
 , python
 , migen
 , litex
@@ -21,11 +20,9 @@ buildPythonPackage rec {
   pname = "litex-boards";
   version = pkgMeta.git_revision;
 
-  src = fetchFromGitHub {
-    owner = pkgMeta.github_user;
-    repo = pkgMeta.github_repo;
+  src = builtins.fetchGit {
+    url = "https://github.com/${pkgMeta.github_user}/${pkgMeta.github_repo}";
     rev = pkgMeta.git_revision;
-    sha256 = pkgMeta.github_archive_nix_hash;
   };
 
   # Won't pick up the shebangs in litex_boards/targets/ automatically,
