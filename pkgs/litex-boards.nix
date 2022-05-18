@@ -2,6 +2,7 @@ pkgMeta:
 { lib
 , buildPythonPackage
 , python
+, pytest
 , migen
 , litex
 , litedram
@@ -54,4 +55,15 @@ buildPythonPackage rec {
   ];
 
   doCheck = true;
+
+  checkInputs = [
+    pytest
+  ];
+  checkPhase = ''
+    ln -s ${builtins.fetchurl {
+      url = "https://github.com/enjoy-digital/litex/files/6076336/ter-u16b.txt";
+      sha256 = "02jg4yah9nr5cln6apx72fp01c4ylvskvi2gfv65wk7rsvn1z1lj";
+    }} ./ter-u16b.bdf
+    pytest -v test/
+  '';
 }
