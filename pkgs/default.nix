@@ -133,6 +133,13 @@ let
           then [ ]
           else builtins.foldl' (acc: name: acc ++ [ self.${"${name}-test"} ]) [ self.${"${name}-test"} ] argNames;
 
+        # Technically at build time this will have both the -pkg and -test
+        # derivation present, which both provide the respective Python
+        # package. This skips this check. All proper conflicts should be found
+        # at build time of the -pkg derivation, whose result this just
+        # reexposes.
+        pythonCatchConflictsPhase = "true";
+
         unpackPhase = "true";
         patchPhase = "true";
         configurePhase = "true";
