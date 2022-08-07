@@ -1,14 +1,16 @@
 pkgMeta:
-{ buildPythonPackage }:
+{ callPackage
+, buildPythonPackage
+, generated ? callPackage (import ./generated.nix pkgMeta) { }
+}:
 
 buildPythonPackage rec {
   pname = "pythondata-cpu-vexriscv";
   version = pkgMeta.git_revision;
 
-  src = builtins.fetchGit {
-    url = "https://github.com/${pkgMeta.github_user}/${pkgMeta.github_repo}";
-    rev = pkgMeta.git_revision;
-  };
+  src = generated;
 
   doCheck = false;
+
+  passthru = { inherit generated; };
 }
