@@ -53,6 +53,11 @@ github_user = "enjoy-digital"
 github_repo = "litevideo"
 git_revision = "41f30143075ece3fff5c33a332ed067d1837cbb3"
 
+[pythondata-cpu-vexriscv]
+github_user = "litex-hub"
+github_repo = "pythondata-cpu-vexriscv"
+git_revision = "7f9db486d402066f6adee5028ae031f09145f4be"
+
 [pythondata-misc-tapcfg]
 github_user = "litex-hub"
 github_repo = "pythondata-misc-tapcfg"

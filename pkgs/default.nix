@@ -175,7 +175,7 @@ let
       testedPkgsNames
     // {
       pythondata-cpu-vexriscv =
-        self.callPackage (import ./pythondata-cpu-vexriscv) { };
+        self.callPackage (import ./pythondata-cpu-vexriscv pkgMetas.pythondata-cpu-vexriscv) { };
       pythondata-misc-tapcfg =
         self.callPackage (import ./pythondata-misc-tapcfg.nix pkgMetas.pythondata-misc-tapcfg) { };
       pythondata-software-compiler_rt =
