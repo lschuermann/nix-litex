@@ -191,6 +191,8 @@ let
   };
 
   overlay = self: super: {
+    sbt-mkDerivation = super.callPackage ./sbt-derivation.nix { };
+
     # Why...
     python3 = applyOverlay super.python3;
     python37 = applyOverlay super.python37;
@@ -202,7 +204,7 @@ let
   extended = pkgs.extend overlay;
 
   pkgSet =
-    builtins.foldl'
+    (builtins.foldl'
       (acc: elem: acc // {
         ${elem} = extended.python3Packages.${elem};
       })
@@ -216,7 +218,9 @@ let
           "pythondata-cpu-serv"
           "pythondata-software-picolibc"
         ]
-      );
+      )) // {
+      sbt-mkDerivation = extended.sbt-mkDerivation;
+    };
 
   # Build a special "maintainance" package which contains tools to
   # work with the TOML-based pkgMetas definition
