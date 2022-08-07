@@ -58,6 +58,11 @@ github_user = "litex-hub"
 github_repo = "pythondata-cpu-vexriscv"
 git_revision = "7f9db486d402066f6adee5028ae031f09145f4be"
 
+[pythondata-cpu-vexriscv_smp]
+github_user = "litex-hub"
+github_repo = "pythondata-cpu-vexriscv_smp"
+git_revision = "4306ae2eb5464bc37d14eff9a3c051d7b0c17d0d"
+
 [pythondata-misc-tapcfg]
 github_user = "litex-hub"
 github_repo = "pythondata-misc-tapcfg"

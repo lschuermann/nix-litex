@@ -50,6 +50,7 @@ pkgs.mkShell {
     litepcie
     litehyperbus
     pythondata-cpu-vexriscv
+    pythondata-cpu-vexriscv_smp
     pkgsCross.riscv64.buildPackages.gcc
     gnumake
     python3Packages.pyvcd
