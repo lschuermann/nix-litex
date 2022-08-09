@@ -64,6 +64,10 @@ buildPythonPackage rec {
       url = "https://github.com/enjoy-digital/litex/files/6076336/ter-u16b.txt";
       sha256 = "02jg4yah9nr5cln6apx72fp01c4ylvskvi2gfv65wk7rsvn1z1lj";
     }} ./ter-u16b.bdf
+    ln -s ${builtins.fetchurl {
+      url = "https://github.com/litex-hub/litex-boards/files/8831568/hyperbus.py.txt";
+      sha256 = "199aqd4i8jaqdhv8frgsmmsgavz63g6z5mv1y5w19q5mjzwwssz4";
+    }} ./hyperbus.py
     pytest -v test/
   '';
 }

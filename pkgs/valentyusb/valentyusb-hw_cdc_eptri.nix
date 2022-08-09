@@ -11,11 +11,6 @@ buildPythonPackage rec {
     rev = pkgMeta.git_revision;
   };
 
-  patches = [
-    ./0001-Add-setup.py.patch
-    ./0002-Add-__init__.py-files-to-modules.patch
-  ];
-
   buildInputs = [
     litex
   ];

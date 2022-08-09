@@ -1,42 +1,42 @@
 [litex]
 github_user = "enjoy-digital"
 github_repo = "litex"
-git_revision = "1d20bbcd01784158088e1eb85e219309cfce0248"
+git_revision = "c4e635ea5c91caecd5bb1f4182dc36c1f766085c"
 
 [litex-boards]
 github_user = "litex-hub"
 github_repo = "litex-boards"
-git_revision = "64773b40850dfb94aae1ab82e1169c5a449435a0"
+git_revision = "bf458e388efea428189a4a33c1cb40cadce85d48"
 
 [liteeth]
 github_user = "enjoy-digital"
 github_repo = "liteeth"
-git_revision = "b0e72431234cbbf42a0f74f1a5f2bff145dfc043"
+git_revision = "6cf7759c9bfaf221eec6e62cae504c7e88ab690b"
 
 [litedram]
 github_user = "enjoy-digital"
 github_repo = "litedram"
-git_revision = "e662fadf8a5426e3a0782587cbe3257bdd92ff5f"
+git_revision = "3d066c87f948e3f8584dfa0244d0930161f71e62"
 
 [litehyperbus]
 github_user = "litex-hub"
 github_repo = "litehyperbus"
-git_revision = "1cde460f24e06e30be7ac1cd361bb2d263528253"
+git_revision = "76454e4c0c304a34b9915722de750887c3abbe89"
 
 [liteiclink]
 github_user = "enjoy-digital"
 github_repo = "liteiclink"
-git_revision = "4aa2293036dbc6977409b5200cb032cdaef51670"
+git_revision = "04aa1396f500418dbcbb15f5afb08eaf01a9e8d9"
 
 [litepcie]
 github_user = "enjoy-digital"
 github_repo = "litepcie"
-git_revision = "40ceadc6774e8a6dda91ece1e4dd909bf6e394aa"
+git_revision = "b4f3f2148e6d554d2f4c1d3ab30af3757eaf8de5"
 
 [litescope]
 github_user = "enjoy-digital"
 github_repo = "litescope"
-git_revision = "878f21a6472ce9f55aac2623a7810600d6281bab"
+git_revision = "1d7e91d019ed2b9fff56485995a7d0d16b45c21b"
 
 [litesdcard]
 github_user = "enjoy-digital"
@@ -56,7 +56,7 @@ git_revision = "41f30143075ece3fff5c33a332ed067d1837cbb3"
 [pythondata-cpu-vexriscv]
 github_user = "litex-hub"
 github_repo = "pythondata-cpu-vexriscv"
-git_revision = "7f9db486d402066f6adee5028ae031f09145f4be"
+git_revision = "e789d50ed1f2a014841e6a8b5f50c714aca3b241"
 
 [pythondata-cpu-vexriscv_smp]
 github_user = "litex-hub"
@@ -66,7 +66,7 @@ git_revision = "4306ae2eb5464bc37d14eff9a3c051d7b0c17d0d"
 [pythondata-misc-tapcfg]
 github_user = "litex-hub"
 github_repo = "pythondata-misc-tapcfg"
-git_revision = "05ce0fc2954a109896f8d79dedc39d29caa39fd7"
+git_revision = "fbcb02422940bbb97c492f0c970959d262b33632"
 
 [pythondata-software-compiler_rt]
 github_user = "litex-hub"
@@ -76,15 +76,15 @@ git_revision = "fcb03245613ccf3079cc833a701f13d0beaae09d"
 [pythondata-cpu-serv]
 github_user = "litex-hub"
 github_repo = "pythondata-cpu-serv"
-git_revision = "faef269e58d32c43931ec88878d89830b5eb84fd"
+git_revision = "45b8f0d208e5bd717d973a07fd9f72ea8a91902a"
 
 [pythondata-software-picolibc]
 github_user = "litex-hub"
 github_repo = "pythondata-software-picolibc"
-git_revision = "ae9c1ca4af911c85f941c8a8540ddae4520ae2cd"
+git_revision = "393d106c6e9b8fdd115a0a301f3a6c0478f92f3b"
 
 [valentyusb-hw_cdc_eptri]
 github_user = "litex-hub"
 github_repo = "valentyusb"
-git_revision = "912d8e6dc72d45e092e608ffcaabfeaaa6d4580f"
+git_revision = "0b534ccfccfcdcb7a5db219743f0c0b20e5ec412"
 git_branch = "hw_cdc_eptri"

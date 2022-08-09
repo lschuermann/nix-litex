@@ -35,7 +35,7 @@ sbt-mkDerivation rec {
   # regenerate them, then replace this with the hash it gives you and rebuild.
   # not doing this will break reproducibility and may cause sbt to report
   # errors that it can't download stuff during the build.
-  depsSha256 = "sha256-xnWmXx1ZFSo6yhl4ml2vy9aRDgJfPR5X+2tN4toQr94=";
+  depsSha256 = "sha256-HHzPc1FyEO4Ws2dic+OSI4+J2o8/bmNJXRhB2A0LYaQ=";
 
   buildPhase = ''
     runHook preBuild

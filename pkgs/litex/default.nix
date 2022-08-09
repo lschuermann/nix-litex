@@ -1,10 +1,12 @@
 pkgMeta:
 { lib
+, writeText
 , buildPythonPackage
 , fetchpatch
 , pythondata-software-compiler_rt
 , pythondata-software-picolibc
 , pythondata-cpu-vexriscv
+, pythondata-cpu-vexriscv_smp
 , pythondata-cpu-serv
 , pythondata-misc-tapcfg
 , pyserial
@@ -38,15 +40,9 @@ buildPythonPackage rec {
 
   patches = [
     ./0001-picolibc-allow-building-with-meson-0.57.patch
-    # cores/cpu/vexriscv_smp: add default cores used by linux with l2 cache
-    (fetchpatch {
-      url = "https://github.com/enjoy-digital/litex/commit/1ce378e24db00dbbfe9a721fe14662f696cbfd2a.patch";
-      hash = "sha256-4BxkBOJwfCQ0xL76MiMcOj85hHkYlQzf6z4Fmu84Iak=";
-    })
-    # cores/cpu/vexriscv_smp: define SYNTHESIS in Quartus
-    (fetchpatch {
-      url = "https://github.com/enjoy-digital/litex/commit/c2b62a6b0c527b86cc67831a45f183c92fc0a3aa.patch";
-      hash = "sha256-R7McX6+EQqJUYNHKVU7MgQH/L16lceWcmLZC8gPEARc=";
+    (builtins.fetchurl {
+      url = "https://patch-diff.githubusercontent.com/raw/enjoy-digital/litex/pull/1395.patch";
+      sha256 = "0s0z57zgizkfjzfja0q3pgs37gs5pgarsva34lqlkgb2lkgpqzsi";
     })
   ];
 
@@ -75,6 +71,7 @@ buildPythonPackage rec {
     liteiclink
     litescope
     pythondata-cpu-vexriscv
+    pythondata-cpu-vexriscv_smp
     pythondata-cpu-serv
     pythondata-misc-tapcfg
     pkgsCross.riscv64-embedded.buildPackages.gcc
@@ -111,15 +108,12 @@ buildPythonPackage rec {
       $NIX_LDFLAGS"
 
     # Only test CPU variants we actually package and want to support
-    # as part of this repository
-    pytest -v -k " \
-      not test_vexriscv_smp \
-      and not test_ibex \
-      and not test_cv32e40p \
-      and not test_femtorv \
-      and not test_picorv32 \
-      and not test_minerva \
-    " test/
+    # as part of this repository. Others are disabled by the following
+    # patch:
+    patch -p1 < ${writeText "disable-litex-test-cpus.patch" (
+      builtins.readFile ./0001-Disable-LiteX-CPU-tests-for-select-CPUs.patch)}
+
+    pytest -v test/
   '';
 
   doCheck = true;
