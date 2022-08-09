@@ -21,11 +21,37 @@ let
       )
     )
   );
+
+  # Pin a Nixpkgs revision to source the `sbt` package and JRE from,
+  # in order to build softcores written in Scala DSLs (e.g. VexRiscv).
+  # We use `sbt-mkDerivation`, which produces a fixed output hash
+  # derivation of all package dependencies before building the actual
+  # package. However, this intermediate dependency derivation seem to
+  # be dependent on the used Nixpkgs from which sbt, the JRE and all
+  # other packages for the sbt build is taken. Hence, we pin a version
+  # here (preferably from the current Nixpkgs release). It can be
+  # overriden by passing the `sbtNixpkgs` argument.
+  sbtPinnedNixpkgs =
+    import
+      (builtins.fetchTarball {
+        # Descriptive name to make the store path easier to identify
+        name = "nixos-22.05-2022-08-06";
+        # Commit hash for nixos-22.05 as of 2022-08-06
+        url = "https://github.com/nixos/nixpkgs/archive/72f492e275fc29d44b3a4daf952fbeffc4aed5b8.tar.gz";
+        # Hash obtained using `nix-prefetch-url --unpack <url>`
+        sha256 = "1n06bz81x5ij3if032w4hggq13mgsqly3bn54809szajxnazfm0v";
+      })
+      { };
 in
 
 # pkgMetas: Metadata for the packages such that you can control which revisions
-  # are used. If not specified, the versions will be taken from `litex_packages.toml`.
-{ pkgs, skipChecks ? false, pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml) }:
+  # are used. If not specified, the versions will be taken from
+  # `litex_packages.toml`.
+{ pkgs
+, skipChecks ? false
+, pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml)
+, sbtNixpkgs ? sbtPinnedNixpkgs
+}:
 
 let
   lib = pkgs.lib;
@@ -111,6 +137,13 @@ let
           rm -rf "$out"
           mkdir -p "$out"
         '';
+
+        # Technically at build time this will have both the -pkg and the here
+        # built test derivation present, which both provide the respective
+        # Python package. This skips this check. All proper conflicts should be
+        # found at build time of the -pkg derivation, whose result this just
+        # reexposes.
+        pythonCatchConflictsPhase = "true";
       });
     in
     self.callPackage f (args // { buildPythonPackage = maker; });
@@ -193,7 +226,7 @@ let
   };
 
   overlay = self: super: {
-    sbt-mkDerivation = super.callPackage ./sbt-derivation.nix { };
+    sbt-mkDerivation = sbtNixpkgs.callPackage ./sbt-derivation.nix { };
 
     # Why...
     python3 = applyOverlay super.python3;
