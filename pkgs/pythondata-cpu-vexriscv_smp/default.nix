@@ -5,7 +5,7 @@ pkgMeta:
 }:
 
 buildPythonPackage rec {
-  pname = "pythondata-cpu-vexriscv";
+  pname = "pythondata-cpu-vexriscv_smp";
   version = pkgMeta.git_revision;
 
   src = generated;

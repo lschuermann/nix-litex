@@ -1,6 +1,7 @@
 pkgMeta:
 { lib
 , buildPythonPackage
+, fetchpatch
 , pythondata-software-compiler_rt
 , pythondata-software-picolibc
 , pythondata-cpu-vexriscv
@@ -37,6 +38,16 @@ buildPythonPackage rec {
 
   patches = [
     ./0001-picolibc-allow-building-with-meson-0.57.patch
+    # cores/cpu/vexriscv_smp: add default cores used by linux with l2 cache
+    (fetchpatch {
+      url = "https://github.com/enjoy-digital/litex/commit/1ce378e24db00dbbfe9a721fe14662f696cbfd2a.patch";
+      hash = "sha256-4BxkBOJwfCQ0xL76MiMcOj85hHkYlQzf6z4Fmu84Iak=";
+    })
+    # cores/cpu/vexriscv_smp: define SYNTHESIS in Quartus
+    (fetchpatch {
+      url = "https://github.com/enjoy-digital/litex/commit/c2b62a6b0c527b86cc67831a45f183c92fc0a3aa.patch";
+      hash = "sha256-R7McX6+EQqJUYNHKVU7MgQH/L16lceWcmLZC8gPEARc=";
+    })
   ];
 
   propagatedBuildInputs = [

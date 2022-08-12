@@ -7,12 +7,36 @@
 with pkgs;
 
 let
-  litexPkgs = import ./pkgs { inherit pkgs; skipChecks = skipPkgChecks; };
+  # import the litex package set and overlay it onto nixpkgs so we can
+  # modify the packages inside it
+  litexImport = (import ./pkgs { inherit pkgs; skipChecks = skipPkgChecks; });
+  litexPkgs = (import pkgs.path {
+    overlays = [
+      litexImport.overlay
+
+      (self: super: {
+        maintenance = litexImport.maintenance;
+
+        # override the CPU to add a patch, will be automatically rebuilt
+        python3 = super.python3.override {
+          packageOverrides = p-self: p-super: {
+            pythondata-cpu-vexriscv = (p-super.pythondata-cpu-vexriscv.override ({
+              generated = p-super.pythondata-cpu-vexriscv.generated.overrideAttrs (prev: {
+                patches = (prev.patches or [ ]) ++ [
+                  ./pkgs/pythondata-cpu-vexriscv/0001-Add-TockSecureIMC-cpu-variant.patch
+                ];
+              });
+            }));
+          };
+        };
+      })
+    ];
+  });
 
 in
 pkgs.mkShell {
   name = "litex-shell";
-  buildInputs = with litexPkgs; [
+  buildInputs = with litexPkgs; with litexPkgs.python3Packages; [
     python3Packages.migen
     openocd
 
@@ -26,6 +50,7 @@ pkgs.mkShell {
     litepcie
     litehyperbus
     pythondata-cpu-vexriscv
+    pythondata-cpu-vexriscv_smp
     pkgsCross.riscv64.buildPackages.gcc
     gnumake
     python3Packages.pyvcd
