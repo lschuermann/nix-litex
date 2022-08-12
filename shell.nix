@@ -16,19 +16,6 @@ let
 
       (self: super: {
         maintenance = litexImport.maintenance;
-
-        # override the CPU to add a patch, will be automatically rebuilt
-        python3 = super.python3.override {
-          packageOverrides = p-self: p-super: {
-            pythondata-cpu-vexriscv = (p-super.pythondata-cpu-vexriscv.override ({
-              generated = p-super.pythondata-cpu-vexriscv.generated.overrideAttrs (prev: {
-                patches = (prev.patches or [ ]) ++ [
-                  ./pkgs/pythondata-cpu-vexriscv/0001-Add-TockSecureIMC-cpu-variant.patch
-                ];
-              });
-            }));
-          };
-        };
       })
     ];
   });
