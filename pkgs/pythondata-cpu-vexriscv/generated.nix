@@ -1,7 +1,7 @@
 pkgMeta:
-{ sbt-mkDerivation }:
+{ mkSbtDerivation }:
 
-sbt-mkDerivation rec {
+mkSbtDerivation rec {
   pname = "pythondata-cpu-vexriscv-generated";
   version = pkgMeta.git_revision;
 
@@ -25,23 +25,17 @@ sbt-mkDerivation rec {
     pushd pythondata_cpu_vexriscv/verilog
     sbt compile
     popd
-
-    # save sbt's dependency directory where the sbt-mkDerivation infra
-    # expects it
-    mv pythondata_cpu_vexriscv/verilog/.nix .
   '';
 
   # if any sbt files or dependencies change, change this hash to cause nix to
   # regenerate them, then replace this with the hash it gives you and rebuild.
   # not doing this will break reproducibility and may cause sbt to report
   # errors that it can't download stuff during the build.
-  depsSha256 = "sha256-HHzPc1FyEO4Ws2dic+OSI4+J2o8/bmNJXRhB2A0LYaQ=";
+  depsSha256 = "sha256-cbDi1WqbRQrYHG6l/hErEI8MyaiRBfunUBlGsexA/Sk=";
+  depsArchivalStrategy = "copy";
 
   buildPhase = ''
     runHook preBuild
-
-    # move dependencies to where sbt expects them
-    mv .nix pythondata_cpu_vexriscv/verilog/
 
     # delete old CPU variant sources
     rm pythondata_cpu_vexriscv/verilog/*.v
@@ -55,9 +49,7 @@ sbt-mkDerivation rec {
   installPhase = ''
     runHook preInstall
 
-    # remove SBT dependencies and build artifacts
-    rm -rf pythondata_cpu_vexriscv/verilog/.nix
-
+    # remove build artifacts
     find . -wholename "*/src/main" -print0 | \
       xargs -0 -I{} bash -c 'rm -rf {}/../../{target,project/project,project/target}'
 

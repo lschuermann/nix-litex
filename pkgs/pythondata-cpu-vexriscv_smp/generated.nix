@@ -1,10 +1,10 @@
 pkgMeta:
-{ sbt-mkDerivation, python3, litex-unchecked, migen }:
+{ mkSbtDerivation, python3, litex-unchecked, migen }:
 let
   # python environment with the litex used to generate the default CPU variants
   pythonEnv = python3.withPackages (_: [ litex-unchecked migen ]);
 in
-sbt-mkDerivation rec {
+mkSbtDerivation rec {
   pname = "pythondata-cpu-vexriscv_smp-generated";
   version = pkgMeta.git_revision;
 
@@ -29,23 +29,17 @@ sbt-mkDerivation rec {
     pushd pythondata_cpu_vexriscv_smp/verilog/ext/VexRiscv
     sbt compile
     popd
-
-    # save sbt's dependency directory where the sbt-mkDerivation infra
-    # expects it
-    mv pythondata_cpu_vexriscv_smp/verilog/ext/VexRiscv/.nix .
   '';
 
   # if any sbt files or dependencies change, change this hash to cause nix to
   # regenerate them, then replace this with the hash it gives you and rebuild.
   # not doing this will break reproducibility and may cause sbt to report
   # errors that it can't download stuff during the build.
-  depsSha256 = "sha256-XxcGG9sy2FJUL5ppBrDCtbkkGdlZ/CAatdAGl2gZ0ks=";
+  depsSha256 = "sha256-0/OtBU0yhEBKmXDcIeoHcFE1bre6hZsl4I/+DI12Z5A=";
+  depsArchivalStrategy = "copy";
 
   buildPhase = ''
     runHook preBuild
-
-    # move dependencies to where sbt expects them
-    mv .nix pythondata_cpu_vexriscv_smp/verilog/ext/VexRiscv
 
     # delete old CPU variant sources
     rm pythondata_cpu_vexriscv_smp/verilog/VexRiscv*.v
@@ -56,14 +50,17 @@ sbt-mkDerivation rec {
     runHook postBuild
   '';
 
+  # default RAM allocation is not enough and causes compliation to take several
+  # minutes longer than necessary due to GC thrashing
+  SBT_OPTS = ''-Xmx2G'';
+
   installPhase = ''
     runHook preInstall
 
-    # remove SBT dependencies and build artifacts
-    rm -rf pythondata_cpu_vexriscv_smp/verilog/ext/VexRiscv/.nix
-
+    # remove build artifacts
     find . -wholename "*/src/main" -print0 | \
       xargs -0 -I{} bash -c 'rm -rf {}/../../{target,project/project,project/target}'
+    rm -rf pythondata_cpu_vexriscv_smp/verilog/ext/SpinalHDL/project/{project,target}
 
     # VexRiscv writes the current timestamp into the generated
     # output, which breaks reproducibility. Remove it.

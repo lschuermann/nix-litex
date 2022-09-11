@@ -24,7 +24,7 @@ let
 
   # Pin a Nixpkgs revision to source the `sbt` package and JRE from,
   # in order to build softcores written in Scala DSLs (e.g. VexRiscv).
-  # We use `sbt-mkDerivation`, which produces a fixed output hash
+  # We use `mkSbtDerivation`, which produces a fixed output hash
   # derivation of all package dependencies before building the actual
   # package. However, this intermediate dependency derivation seem to
   # be dependent on the used Nixpkgs from which sbt, the JRE and all
@@ -226,7 +226,7 @@ let
   };
 
   overlay = self: super: {
-    sbt-mkDerivation = sbtNixpkgs.callPackage ./sbt-derivation.nix { };
+    mkSbtDerivation = sbtNixpkgs.callPackage ./sbt-derivation.nix { };
 
     # Why...
     python3 = applyOverlay super.python3;
@@ -255,7 +255,7 @@ let
           "pythondata-software-picolibc"
         ]
       )) // {
-      sbt-mkDerivation = extended.sbt-mkDerivation;
+      mkSbtDerivation = extended.mkSbtDerivation;
     };
 
   # Build a special "maintainance" package which contains tools to
