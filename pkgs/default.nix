@@ -159,6 +159,7 @@ let
         pname = pkg._base_name;
         inherit (pkg) version;
 
+        format = "other";
         src = pkg._src;
 
         nativeBuildInputs =
