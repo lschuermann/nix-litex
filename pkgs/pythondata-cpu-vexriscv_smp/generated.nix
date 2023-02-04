@@ -35,7 +35,7 @@ mkSbtDerivation rec {
   # regenerate them, then replace this with the hash it gives you and rebuild.
   # not doing this will break reproducibility and may cause sbt to report
   # errors that it can't download stuff during the build.
-  depsSha256 = "sha256-0/OtBU0yhEBKmXDcIeoHcFE1bre6hZsl4I/+DI12Z5A=";
+  depsSha256 = "sha256-rlXCYFFXVmPNlP+twESdVZcz28lkaR//9gt9wwVqGmk=";
   depsArchivalStrategy = "copy";
 
   buildPhase = ''

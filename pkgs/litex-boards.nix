@@ -15,6 +15,7 @@ pkgMeta:
 , valentyusb-hw_cdc_eptri
 , litevideo
 , litescope
+, litesdcard
 }:
 
 buildPythonPackage rec {
@@ -52,6 +53,7 @@ buildPythonPackage rec {
     valentyusb-hw_cdc_eptri
     litevideo
     litescope
+    litesdcard
   ];
 
   doCheck = true;

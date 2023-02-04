@@ -1,4 +1,4 @@
-From b07e2e0d2b1cef9d39e415338653c8605bf4bbb7 Mon Sep 17 00:00:00 2001
+From beed71dae413a525d62c9f8ef4d34f1116d3a369 Mon Sep 17 00:00:00 2001
 From: Leon Schuermann <leon@is.currently.online>
 Date: Sun, 7 Aug 2022 21:07:22 +0200
 Subject: [PATCH] Disable LiteX CPU tests for select CPUs
@@ -7,32 +7,32 @@ These CPUs are either not packaged as part of nix-litex yet, or cannot
 be tested due to requiring a non-cached toolchain or internet access
 during build.
 ---
- test/test_cpu.py | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ test/test_cpu.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/test/test_cpu.py b/test/test_cpu.py
-index 5614d4c4..8b7be9cd 100644
+index adbda7c3..b13aa62c 100644
 --- a/test/test_cpu.py
 +++ b/test/test_cpu.py
-@@ -36,12 +36,12 @@ class TestCPU(unittest.TestCase):
+@@ -37,11 +37,11 @@ class TestCPU(unittest.TestCase):
  
      def test_cpu(self):
          tested_cpus = [
 -            "cv32e40p",     # (riscv   / softcore)
 -            "femtorv",      # (riscv   / softcore)
 -            "firev",        # (riscv   / softcore)
--            "ibex",         # (riscv   / softcore)
 -            "marocchino",   # (or1k    / softcore)
 -            "naxriscv",     # (riscv   / softcore)
 +            # "cv32e40p",     # (riscv   / softcore)
 +            # "femtorv",      # (riscv   / softcore)
 +            # "firev",        # (riscv   / softcore)
-+            # "ibex",         # (riscv   / softcore)
 +            # "marocchino",   # (or1k    / softcore)
 +            # "naxriscv",     # (riscv   / softcore)
              "serv",         # (riscv   / softcore)
              "vexriscv",     # (riscv   / softcore)
              "vexriscv_smp", # (riscv   / softcore)
+
+base-commit: a6d9955c9d3065d5c04cd4cba392b2fcb831380f
 -- 
-2.36.0
+2.38.1
 
