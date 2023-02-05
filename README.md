@@ -13,9 +13,6 @@ the mailing list.
 
 - Nix: >= v2.4
 
-  On NixOS 21.05, this can be obtained by setting `nix.package =
-  pkgs.nixUnstable;`.
-
 ## Contributors
 
 - Leon Schuermann <leon@is.currently.online>
