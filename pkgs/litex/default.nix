@@ -59,7 +59,9 @@ buildPythonPackage rec {
     packaging
   ];
 
-  checkInputs = [
+  # For more information on why this hack is needed, see the
+  # `pythonCheckInputsMagic.nix` file.
+  ${import ../pythonCheckInputsMagic.nix lib buildPythonPackage} = [
     litedram
     liteeth
     liteiclink
