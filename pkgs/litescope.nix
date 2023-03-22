@@ -26,7 +26,9 @@ buildPythonPackage rec {
     litex
   ];
 
-  checkInputs = [
+  # For more information on why this hack is needed, see the
+  # `pythonCheckInputsMagic.nix` file.
+  ${import ./pythonCheckInputsMagic.nix lib buildPythonPackage} = [
     litex
     litex-boards
     liteiclink

@@ -17,6 +17,7 @@ pkgMeta:
 , liteeth
 , liteiclink
 , litescope
+, packaging
 , pytest
 , pexpect
 , meson
@@ -38,14 +39,6 @@ buildPythonPackage rec {
     rev = pkgMeta.git_revision;
   };
 
-  patches = [
-    ./0001-picolibc-allow-building-with-meson-0.57.patch
-    (builtins.fetchurl {
-      url = "https://patch-diff.githubusercontent.com/raw/enjoy-digital/litex/pull/1395.patch";
-      sha256 = "0s0z57zgizkfjzfja0q3pgs37gs5pgarsva34lqlkgb2lkgpqzsi";
-    })
-  ];
-
   propagatedBuildInputs = [
     # LLVM's compiler-rt data downloaded and importable as a python
     # package
@@ -63,9 +56,12 @@ buildPythonPackage rec {
     migen
     requests
     colorama
+    packaging
   ];
 
-  checkInputs = [
+  # For more information on why this hack is needed, see the
+  # `pythonCheckInputsMagic.nix` file.
+  ${import ../pythonCheckInputsMagic.nix lib buildPythonPackage} = [
     litedram
     liteeth
     liteiclink

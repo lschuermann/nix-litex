@@ -159,6 +159,7 @@ let
         pname = pkg._base_name;
         inherit (pkg) version;
 
+        format = "other";
         src = pkg._src;
 
         nativeBuildInputs =
@@ -254,9 +255,7 @@ let
           "pythondata-cpu-serv"
           "pythondata-software-picolibc"
         ]
-      )) // {
-      mkSbtDerivation = extended.mkSbtDerivation;
-    };
+      ));
 
   # Build a special "maintainance" package which contains tools to
   # work with the TOML-based pkgMetas definition
@@ -282,8 +281,9 @@ let
   };
 
 in
-pkgSet // {
+{
   inherit overlay pythonOverlay maintenance;
   packages = pkgSet;
   nixpkgsExtended = extended;
+  mkSbtDerivation = extended.mkSbtDerivation;
 }
