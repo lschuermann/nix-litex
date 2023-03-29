@@ -30,9 +30,11 @@ let
   # be dependent on the used Nixpkgs from which sbt, the JRE and all
   # other packages for the sbt build is taken. Hence, we pin a version
   # here (preferably from the current Nixpkgs release). It can be
-  # overriden by passing the `sbtNixpkgs` argument.
+  # overriden by passing the `sbtNixpkgs` argument. We use the same
+  # system as the passed pkgs instead of autodetecting it for
+  # compatibility with pure evaluation.
   sbtPinnedNixpkgs =
-    import
+    system: import
       (builtins.fetchTarball {
         # Descriptive name to make the store path easier to identify
         name = "nixos-22.05-2022-08-06";
@@ -41,7 +43,7 @@ let
         # Hash obtained using `nix-prefetch-url --unpack <url>`
         sha256 = "1n06bz81x5ij3if032w4hggq13mgsqly3bn54809szajxnazfm0v";
       })
-      { };
+      { inherit system; };
 in
 
 # pkgMetas: Metadata for the packages such that you can control which revisions
@@ -50,7 +52,7 @@ in
 { pkgs
 , skipChecks ? false
 , pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml)
-, sbtNixpkgs ? sbtPinnedNixpkgs
+, sbtNixpkgs ? (sbtPinnedNixpkgs pkgs.stdenv.system)
 }:
 
 let
