@@ -228,16 +228,26 @@ let
     packageOverrides = pythonOverlay;
   };
 
+  # Each Python package requires the overlay to be applied separately. This
+  # function effectively generates the following:
+  #
+  # {
+  #   python3 = applyOverlay super.python3;
+  #   python37 = applyOverlay super.python37;
+  #   python38 = applyOverlay super.python38;
+  #   ...
+  # }
+  #
+  # This does perform a filter operation over all package names, but happens to
+  # be quite fast in practice.
+  applyPythonOverlays = super: applyOverlayFn:
+    lib.genAttrs
+      (lib.filter (name: (builtins.match "^python3([0-9]+)?$" name) != null) (builtins.attrNames super))
+      (attrName: applyOverlayFn super."${attrName}");
+
   overlay = self: super: {
     mkSbtDerivation = sbtNixpkgs.callPackage ./sbt-derivation.nix { };
-
-    # Why...
-    python3 = applyOverlay super.python3;
-    python37 = applyOverlay super.python37;
-    python38 = applyOverlay super.python38;
-    python39 = applyOverlay super.python39;
-    python310 = applyOverlay super.python310;
-  };
+  } // (applyPythonOverlays super applyOverlay);
 
   extended = pkgs.extend overlay;
 
@@ -284,7 +294,7 @@ let
 
 in
 {
-  inherit overlay pythonOverlay maintenance;
+  inherit overlay pythonOverlay maintenance applyPythonOverlays;
   packages = pkgSet;
   nixpkgsExtended = extended;
   mkSbtDerivation = extended.mkSbtDerivation;
