@@ -16,6 +16,7 @@ pkgMeta:
 , litevideo
 , litescope
 , litesdcard
+, pythondata-misc-usb_ohci
 }:
 
 buildPythonPackage rec {
@@ -54,6 +55,7 @@ buildPythonPackage rec {
     litevideo
     litescope
     litesdcard
+    pythondata-misc-usb_ohci
   ];
 
   doCheck = true;

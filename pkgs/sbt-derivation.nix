@@ -1,9 +1,9 @@
 { pkgs, sbt, jre8 }:
 let
   mkSbtDerivation = import (fetchTarball {
-    name = "sbt-derivation-2022-08-30";
-    url = "https://github.com/zaninime/sbt-derivation/archive/fe0044d2cd351f4d6257956cde3a2ef633d33616.tar.gz";
-    sha256 = "sha256:04pi1a8g87pw4jjyzkj0aircpk8l2nxwy4lykwx8hg5m3gr4mr87";
+    name = "sbt-derivation-2023-10-27";
+    url = "https://github.com/zaninime/sbt-derivation/archive/6762cf2c31de50efd9ff905cbcc87239995a4ef9.tar.gz";
+    sha256 = "sha256:0g9dzw734k4qhvc4h88zjbrxdiz6g8kgq7qgbac8jgj8cvns6xry";
   });
 
   overrides = {

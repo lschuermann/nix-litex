@@ -1,5 +1,5 @@
 pkgMeta:
-{ lib, buildPythonPackage, litex, migen }:
+{ lib, buildPythonPackage, litex, migen, pytest, liteeth }:
 
 buildPythonPackage rec {
   pname = "liteiclink";
@@ -16,4 +16,15 @@ buildPythonPackage rec {
   ];
 
   doCheck = true;
+
+  # For more information on why this hack is needed, see the
+  # `pythonCheckInputsMagic.nix` file.
+  ${import ./pythonCheckInputsMagic.nix lib buildPythonPackage} = [
+    pytest
+    liteeth
+  ];
+
+  checkPhase = ''
+    pytest -v test/
+  '';
 }

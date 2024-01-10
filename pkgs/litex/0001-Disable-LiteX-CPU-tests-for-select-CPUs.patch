@@ -1,4 +1,4 @@
-From beed71dae413a525d62c9f8ef4d34f1116d3a369 Mon Sep 17 00:00:00 2001
+From b1f33116511937463a2fed461c9c1fe4d5189b77 Mon Sep 17 00:00:00 2001
 From: Leon Schuermann <leon@is.currently.online>
 Date: Sun, 7 Aug 2022 21:07:22 +0200
 Subject: [PATCH] Disable LiteX CPU tests for select CPUs
@@ -7,14 +7,14 @@ These CPUs are either not packaged as part of nix-litex yet, or cannot
 be tested due to requiring a non-cached toolchain or internet access
 during build.
 ---
- test/test_cpu.py | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ test/test_cpu.py | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/test/test_cpu.py b/test/test_cpu.py
-index adbda7c3..b13aa62c 100644
+index 22dac251..b1336c9c 100644
 --- a/test/test_cpu.py
 +++ b/test/test_cpu.py
-@@ -37,11 +37,11 @@ class TestCPU(unittest.TestCase):
+@@ -37,16 +37,16 @@ class TestCPU(unittest.TestCase):
  
      def test_cpu(self):
          tested_cpus = [
@@ -30,9 +30,17 @@ index adbda7c3..b13aa62c 100644
 +            # "naxriscv",     # (riscv   / softcore)
              "serv",         # (riscv   / softcore)
              "vexriscv",     # (riscv   / softcore)
-             "vexriscv_smp", # (riscv   / softcore)
+-            "vexriscv_smp", # (riscv   / softcore)
+-            "microwatt",    # (ppc64   / softcore)
+-            "neorv32",      # (riscv   / softcore)
++            # "vexriscv_smp", # (riscv   / softcore)
++            # "microwatt",    # (ppc64   / softcore)
++            # "neorv32",      # (riscv   / softcore)
+         ]
+         untested_cpus = [
+             "blackparrot",  # (riscv   / softcore) -> Broken install?
 
-base-commit: a6d9955c9d3065d5c04cd4cba392b2fcb831380f
+base-commit: 08ff00317851345c7486aa58d8d2f5d07c9c8522
 -- 
-2.38.1
+2.42.0
 
