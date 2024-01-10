@@ -38,7 +38,10 @@ mkSbtDerivation rec {
     runHook preBuild
 
     # delete old CPU variant sources
-    rm pythondata_cpu_vexriscv/verilog/*.v
+    #
+    # Depending on the `src` attribute, these might have already been cleaned,
+    # use `-f` to avoid generating an error.
+    rm -f pythondata_cpu_vexriscv/verilog/*.v
 
     # rebuild all CPU variants
     make -C pythondata_cpu_vexriscv/verilog
